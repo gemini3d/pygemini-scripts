@@ -29,6 +29,7 @@ def load_coeffs(filename):
     t=np.zeros(indt)
     coeffs=np.zeros((3,lx,indt))
     rhs=np.zeros((lx,indt))
+    temperature=np.zeros((lx,indt))
     indt=0
     for key in keylist:
         if key[0:6]=="coeffs":
@@ -40,5 +41,8 @@ def load_coeffs(filename):
         elif key[0:3]=="rhs":
             indt=int(key[3:])-1
             rhs[:,indt]=np.array(h5file[key])
+        elif key[0:7]=="TsEuler":
+            indt=int(key[7:])-1
+            temperature[:,indt]=np.array(h5file[key])
             
-    return [t,coeffs,rhs]
+    return [t,coeffs,rhs,temperature]
