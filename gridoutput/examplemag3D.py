@@ -12,7 +12,7 @@ import gemini3d.read
 import matplotlib.pyplot as plt
 import numpy as np
 
-# load some sample data
+# load some sample data (3D)
 direc="~/simulations/tohoku20113D_lowres_2Daxisneu_CI/"
 cfg=gemini3d.read.config(direc)
 xg=gemini3d.read.grid(direc)
