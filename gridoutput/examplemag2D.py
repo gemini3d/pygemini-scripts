@@ -25,7 +25,7 @@ parm=np.array(dat["v1"])
 # define slices indices
 ilon=0
 
-# plot various slices through the 3D domain
+# plot various slices through the 2D domain
 plt.figure()
 plt.pcolormesh(mlati,alti/1e3,parmi[:,ilon,:])
 plt.xlabel('mlat')
