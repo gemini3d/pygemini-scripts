@@ -9,12 +9,12 @@ from plotcurv import plotcurv3D
 from matplotlib.pyplot import show
 
 # load some sample data (3D)
-direc = "~/simulations/raid/tohoku20112D_medres_axineu_CI"
+direc = "~/simulations/raid/tohoku20113D_lowres_2Daxisneu"
 cfg = read.config(direc)
 xg = read.grid(direc)
 dat = read.frame(direc, cfg["time"][-1], var="v1")
 
 # grid data
-plotcurv3D(xg, dat["v1"], cfg, lalt=128, llon=128, llat=128)
+plotcurv3D(xg, dat["v1"], cfg, "$v_1$ m/s", lalt=256, llon=256, llat=256)
 
 show()
