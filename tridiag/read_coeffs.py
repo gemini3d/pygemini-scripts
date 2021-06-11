@@ -29,23 +29,23 @@ def load_coeffs(fn) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
             if key.startswith("coeffs"):
                 indt = indt + 1
 
-        # now read time,coefficient, and rhs variables; must convert to numpy arrays in the process
+        # now read time,coefficient, and rhs variables
         t = np.zeros(indt)
         coeffs = np.zeros((3, lx, indt))
         rhs = np.zeros((lx, indt))
         temperature = np.zeros((lx, indt))
         indt = 0
         for key in keylist:
-            if key[0:6] == "coeffs":
+            if key.startswith("coeffs"):
                 indt = int(key[6:]) - 1
                 coeffs[:, :, indt] = f[key][:]
-            elif key[0:1] == "t":
+            elif key.startswith("t"):
                 indt = int(key[1:]) - 1
                 t[indt] = f[key][:]
-            elif key[0:3] == "rhs":
+            elif key.startswith("rhs"):
                 indt = int(key[3:]) - 1
                 rhs[:, indt] = f[key][:]
-            elif key[0:7] == "TsEuler":
+            elif key.startswith("TsEuler"):
                 indt = int(key[7:]) - 1
             temperature[:, indt] = f[key][:]
 
