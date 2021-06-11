@@ -3,7 +3,7 @@ from plotgrid import plotoutline3D, plotoutline2D
 from matplotlib.pyplot import show
 
 
-# generate a 3D grid
+# %% generate a 3D grid
 cfg = {
     "dtheta": 11,
     "dphi": 105,
@@ -18,10 +18,10 @@ cfg = {
 }
 xg = tilted_dipole3d(cfg)
 
-# plot the 3D grid outline
+# %% plot the 3D grid outline
 plotoutline3D(xg)
 
-# generate a 2D grid
+# %% generate a 2D grid
 cfg = {
     "dtheta": 11,
     "dphi": 105,
@@ -36,7 +36,7 @@ cfg = {
 }
 xg = tilted_dipole3d(cfg)
 
-# plot the 2D grid
+# %% plot the 2D grid
 plotoutline2D(xg)
 
 show()
