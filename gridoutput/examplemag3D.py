@@ -9,7 +9,7 @@ from plotcurv import plotcurv3D
 from matplotlib.pyplot import show
 
 # load some sample data (3D)
-direc = "~/simulations/raid/tohoku20112D_medres_axineu_CI"
+direc = "~/simulations/raid/tohoku20112D_medres/"
 cfg = read.config(direc)
 xg = read.grid(direc)
 dat = read.frame(direc, cfg["time"][-1], var="v1")

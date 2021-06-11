@@ -3,26 +3,32 @@
 @author: zettergm
 """
 
-# imports
+import typing as T
 from gemini3d.grid.gridmodeldata import model2magcoords
 from matplotlib.pyplot import figure
-import numpy as np
 import xarray
 
 
-def plotcurv3D(xg, parm: xarray.DataArray, cfg, lalt=256, llon=256, llat=256):
+def plotcurv3D(
+    xg: dict[str, T.Any],
+    parm: xarray.DataArray,
+    cfg: dict[str, T.Any],
+    lalt: int = 256,
+    llon: int = 256,
+    llat: int = 256,
+):
     """plot dipole data vs. alt,lon,lat"""
 
     # grid data; wasteful and should only do a slice at a time???
-    [alti, mloni, mlati, parmi] = model2magcoords(xg, parm, lalt, llon, llat)
+    alti, mloni, mlati, parmi = model2magcoords(xg, parm, lalt, llon, llat)
 
     # define slices indices
     altref = 300e3
-    ialt = np.argmin(abs(alti - altref))
+    ialt = abs(alti - altref).argmin()
     lonavg = cfg["sourcemlon"]
-    ilon = np.argmin(abs(mloni - lonavg))
+    ilon = abs(mloni - lonavg).argmin()
     latavg = cfg["sourcemlat"]
-    ilat = np.argmin(abs(mlati - latavg))
+    ilat = abs(mlati - latavg).argmin()
 
     # plot various slices through the 3D domain
     fg = figure()
@@ -48,9 +54,9 @@ def plotcurv3D(xg, parm: xarray.DataArray, cfg, lalt=256, llon=256, llat=256):
 
 
 # alt,lon plot for 2D dipole data
-def plotcurv2D(xg, parm, lalt=512, llat=512):
+def plotcurv2D(xg: dict[str, T.Any], parm: xarray.DataArray, lalt: int = 512, llat: int = 512):
     # grid data
-    [alti, mloni, mlati, parmi] = model2magcoords(xg, parm, lalt, 1, llat)
+    alti, mloni, mlati, parmi = model2magcoords(xg, parm, lalt, 1, llat)
 
     # define slices indices, for 2D there is only one longitude index
     ilon = 0

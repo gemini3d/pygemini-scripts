@@ -1,8 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import typing as T
 
 
-def plotoutline2D(xg):
+def plotoutline2D(xg: dict[str, T.Any]):
     """plot an outline of a 2D grid in mlat and altitude"""
 
     mlat = 90 - xg["theta"] * 180 / np.pi
@@ -15,11 +16,11 @@ def plotoutline2D(xg):
     plt.plot(mlat[:, -1, 0], alt[:, -1, 0] / 1e3)
     plt.xlabel("mlat")
     plt.ylabel("alt")
-    plt.show(block=False)
 
 
-# plot 3D grid outline
-def plotoutline3D(xg):
+def plotoutline3D(xg: dict[str, T.Any]):
+    """plot 3D grid outline"""
+
     mlon = xg["phi"] * 180 / np.pi
     mlat = 90 - xg["theta"] * 180 / np.pi
     alt = xg["alt"]
@@ -44,4 +45,3 @@ def plotoutline3D(xg):
     plt.xlabel("mlon")
     plt.ylabel("mlat")
     ax.set_zlabel("alt")
-    plt.show(block=False)
