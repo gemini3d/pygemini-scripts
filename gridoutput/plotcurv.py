@@ -10,9 +10,9 @@ import xarray
 
 
 def plotcurv3D(
-    xg: dict[str, T.Any],
-    parm: xarray.DataArray,
-    cfg: dict[str, T.Any],
+    xg,
+    parm,
+    cfg,
     lalt: int = 256,
     llon: int = 256,
     llat: int = 256,
@@ -54,7 +54,7 @@ def plotcurv3D(
 
 
 # alt,lon plot for 2D dipole data
-def plotcurv2D(xg: dict[str, T.Any], parm: xarray.DataArray, lalt: int = 512, llat: int = 512):
+def plotcurv2D(xg, parm, lalt: int = 512, llat: int = 512):
     # grid data
     alti, mloni, mlati, parmi = model2magcoords(xg, parm, lalt, 1, llat)
 
