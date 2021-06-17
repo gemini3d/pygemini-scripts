@@ -11,7 +11,7 @@ from matplotlib.pyplot import show
 direc = "~/simulations/raid/2Dmidlat_test/"
 cfg = gemini3d.read.config(direc)
 xg = gemini3d.read.grid(direc)
-dat = gemini3d.read.frame(direc, cfg["time"][0], var="v1")
+dat = gemini3d.read.frame(direc, cfg["time"][1])
 
 # grid data
 plotcurv2D(xg, dat["ne"], lalt=1024, llat=1024)

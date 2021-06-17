@@ -41,12 +41,12 @@ def load_coeffs(fn) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
                 coeffs[:, :, indt] = f[key][:]
             elif key.startswith("t"):
                 indt = int(key[1:]) - 1
-                t[indt] = f[key][:]
+                t[indt] = np.array(f[key])
             elif key.startswith("rhs"):
                 indt = int(key[3:]) - 1
                 rhs[:, indt] = f[key][:]
             elif key.startswith("TsEuler"):
                 indt = int(key[7:]) - 1
-            temperature[:, indt] = f[key][:]
+                temperature[:, indt] = f[key][:]
 
     return t, coeffs, rhs, temperature
