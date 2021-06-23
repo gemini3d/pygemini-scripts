@@ -3,16 +3,19 @@
 @author: zettergm
 """
 
+from __future__ import annotations
 import typing as T
-from gemini3d.grid.gridmodeldata import model2magcoords
+
 from matplotlib.pyplot import figure
 import xarray
 
+from gemini3d.grid.gridmodeldata import model2magcoords
+
 
 def plotcurv3D(
-    xg,
-    parm,
-    cfg,
+    xg: dict[str, T.Any],
+    parm: xarray.DataArray,
+    cfg: dict[str, T.Any],
     lalt: int = 256,
     llon: int = 256,
     llat: int = 256,
@@ -54,7 +57,7 @@ def plotcurv3D(
 
 
 # alt,lon plot for 2D dipole data
-def plotcurv2D(xg, parm, lalt: int = 512, llat: int = 512):
+def plotcurv2D(xg: dict[str, T.Any], parm: xarray.DataArray, lalt: int = 512, llat: int = 512):
     # grid data
     alti, mloni, mlati, parmi = model2magcoords(xg, parm, lalt, 1, llat)
 

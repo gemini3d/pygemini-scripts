@@ -11,15 +11,14 @@ takes the output of the test_diffusion1D.f90 program and converts it to numpy ar
 
 from __future__ import annotations
 from pathlib import Path
+
 import numpy as np
 import h5py
 
 
-def load_coeffs(fn) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+def load_coeffs(fn: str | Path) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
 
-    fn = Path(fn).expanduser()
-
-    with h5py.File(fn, "r") as f:
+    with h5py.File(Path(fn).expanduser(), "r") as f:
         keylist = list(f.keys())
         lx = f[keylist[0]].size
 
