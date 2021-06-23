@@ -26,20 +26,34 @@ x0 = -180e3  # initial patch position
 t0 = cfg["time"][0]
 
 # load data from a specified set of time indices
-its = [0, 200, 400]
+its=[200,300,400,500,600,700,800]
 for it in its:
-    print("Loading:  ", cfg["time"][it])
-    dat = gemini3d.read.frame(direc, cfg["time"][it])
-    ne = np.array(dat["ne"])
-    neplot = ne[ialt, :, :]
-    deltat = (cfg["time"][it] - t0).total_seconds()
-    xnow = x0 + vx * deltat  # present center position of patch
+    print("Loading:  ",cfg["time"][it])
+    dat=gemini3d.read.frame(direc,cfg["time"][it])
+    ne=np.array(dat["ne"])
+    neplot=ne[ialt,:,:]
+    deltat=(cfg["time"][it]-t0).total_seconds()
+    xnow=x0+vx*deltat      # present center position of patch
+
     plt.figure(dpi=150)
     cmap = plt.get_cmap("coolwarm")
     plt.pcolormesh((x - xnow) / 1e3, y / 1e3, neplot.transpose(), cmap=cmap)
     plt.xlim(-75, 75)
     plt.xlabel("x (km)")
     plt.ylabel("y (km)")
-    cbarlab = "$n_e$ (m$^{-3}$)"
-    cbar = plt.colorbar(label=cbarlab)
+    plt.title(cfg["time"][it].strftime("%H:%M:%S"))
+    cbarlab="$n_e$ (m$^{-3}$)"
+    cbar=plt.colorbar(label=cbarlab)
     plt.show(block=False)
+
+    plt.figure(dpi=150)
+    cmap=plt.get_cmap("coolwarm")
+    plt.pcolormesh((x-xnow)/1e3,y/1e3,neplot.transpose(),cmap=cmap)
+    plt.xlim(-60,0)
+    plt.ylim(-25,-10)
+    plt.xlabel("x (km)")
+    plt.ylabel("y (km)")
+    plt.title(cfg["time"][it].strftime("%H:%M:%S"))
+    cbarlab="$n_e$ (m$^{-3}$)"
+    cbar=plt.colorbar(label=cbarlab)
+    plt.show(block=False)    
