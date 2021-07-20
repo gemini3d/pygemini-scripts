@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import gemini3d.read
 
 # output data from simulation
-direc="~/simulations/raid/plasmasphere2D_eq"
+direc="~/simulations/plasmasphere2D_eq"
 
 # load the last data frame
 cfg=gemini3d.read.config(direc)
