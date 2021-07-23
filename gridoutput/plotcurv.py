@@ -14,9 +14,9 @@ from gemini3d.grid.gridmodeldata import model2magcoords, model2geogcoords
 
 
 def plotcurv3D(
-    xg,
-    parm,
-    cfg,
+    xg: dict[str, T.Any],
+    parm: xarray.DataArray,
+    cfg: dict[str, T.Any],
     lalt: int = 256,
     llon: int = 256,
     llat: int = 256,
