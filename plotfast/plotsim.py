@@ -22,14 +22,18 @@ def plotdata_ne(xg,ne,time):
     ix=x.size//2
     neplot=np.squeeze(ne[:,ix,:])
     
+    FS=16
+    plt.rcParams['font.size'] = '18'
+
     plt.figure(num=0,dpi=300)
     plt.clf()
     plt.pcolormesh(y/1e3,z/1e3,np.log10(neplot))
     plt.xlabel('N-S distance (km)')
     plt.ylabel('altitude (km)')
     plt.ylim([90,400])
+    plt.xlim([-300,-50])
     plt.colorbar(label="$log_{10} ~ n_e$")
-    plt.clim([9.5,11.75])
+    plt.clim([10,11.25])
     plt.title(str(time)+" s")
     ax=plt.gca()
     ax.set_aspect("equal")
@@ -42,6 +46,9 @@ def plotdata_Te(xg,Te,time):
     y=xg["x3"][2:-2]
     ix=x.size//2
     Teplot=np.squeeze(Te[:,ix,:])
+
+    FS=16
+    plt.rcParams['font.size'] = '18'
     
     plt.figure(num=0,dpi=300)
     plt.clf()
@@ -49,6 +56,7 @@ def plotdata_Te(xg,Te,time):
     plt.xlabel('N-S distance (km)')
     plt.ylabel('altitude (km)')
     plt.ylim([90,400])
+    plt.xlim([-300,-50])
     plt.colorbar(label="$T_e (K)$")
     plt.clim([100,4000])
     plt.title(str(time)+" s")
@@ -62,7 +70,7 @@ def plotdata_Te(xg,Te,time):
 plt.close("all")
 
 # setup output directories
-direc="/Users/zettergm/simulations/raid/fast_cusp/"
+direc="/Users/zettergm/simulations/raid/fast_cusp_fang/"
 plotdir=direc+"/customplots/"
 if not os.path.isdir(plotdir):
     os.mkdir(plotdir)
