@@ -10,8 +10,8 @@ load and plot said simulation
 
 # imports
 import gemini3d.read as read
-import gemini3d.plot
-from matplotlib.pyplot import show
+import gemini3d.plot.curvilinear
+import matplotlib.pyplot as plt
 
 # load some sample data (3D)
 direc = "~/simulations/raid/said_curv_long_allspecies_uneven/"
@@ -20,6 +20,9 @@ xg = read.grid(direc)
 dat = read.frame(direc, cfg["time"][-1], var="Ti")
 
 # grid data
-gemini3d.plot.curv3D_long(xg, dat["Ti"], cfg, lalt=128, llon=128, llat=128)
-
-show()
+fg=plt.figure()
+fg,ax=gemini3d.plot.curvilinear.curv3d_long(cfg=cfg,xg=xg,parm=dat["Ti"],fg=fg)
+ax[0].set_ylim(0,600)
+ax[1].set_aspect('equal')
+ax[2].set_ylim(0,600)
+plt.show(block=False)
