@@ -70,3 +70,4 @@ for it in its:
     
     plt.savefig(plotdir+"/ne"+str(simtime)+"s.png")
     plt.close("all")
+
