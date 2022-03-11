@@ -4,14 +4,6 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-def padstr(simtimestr):
-    simtimestrout=simtimestr
-    if simtime<100:
-        simtimestrout="0"+simtimestrout
-    if simtime<10:
-        simtimestrout="0"+simtimestrout
-    return simtimestrout
-
 # set some font sizes
 SMALL_SIZE = 14
 MEDIUM_SIZE = 16
@@ -27,8 +19,8 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # location of simulation output
 home=os.path.expanduser("~")
-direc = home+"/simulations/raid/GDI_periodic_LL_highres_convertedv2/"
-plotdir=direc+"/customplots_all/"
+direc = home+"/simulations/raid/GDI_MR_small_logp/"
+plotdir=direc+"/customplots/"
 if not os.path.isdir(plotdir):
     os.mkdir(plotdir)
 parmlbl="ne"
@@ -40,10 +32,6 @@ xg = gemini3d.read.grid(direc)
 x = xg["x2"][2:-2]  # remove ghost cells
 y = xg["x3"][2:-2]
 z = xg["x1"][2:-2]
-lz=z.size
-lx=x.size
-ly=y.size
-lt=len(cfg["time"])
 
 # reference altitude
 altref = 300e3
@@ -57,54 +45,49 @@ x0 = -180e3  # initial patch position
 t0 = cfg["time"][0]
 
 # load data from a specified set of time indices
-#its=[200,300,400,500,600,700,800]
-its=range(0,lt)
+its=range(0,640,1)
+plt.figure(dpi=150)
 for it in its:
     print("Loading:  ",cfg["time"][it])
     dat=gemini3d.read.frame(direc,cfg["time"][it])
     ne=np.array(dat["ne"])
     neplot=ne[ialt,:,:]
     deltat=(cfg["time"][it]-t0).total_seconds()
-    xnow=x0+vx*deltat      # present center position of patch
+    #xnow=x0+vx*deltat      # present center position of patch
+    xnow=0
 
-    plt.figure(num=1,dpi=150)
-    plt.clf()
+    #plt.figure(dpi=150)
     #cmap = plt.get_cmap("coolwarm")
+    plt.clf();
     cmap = plt.get_cmap("viridis")
-    plt.pcolormesh((x - xnow) / 1e3, y / 1e3, neplot.transpose(), cmap=cmap, shading="auto")
-    plt.xlim(-75, 75)
+    plt.pcolormesh((x - xnow) / 1e3, y / 1e3, neplot.transpose(), cmap=cmap)
+    plt.xlim(-75, 50)
     plt.xlabel("x (km)")
     plt.ylabel("y (km)")
     plt.title(cfg["time"][it].strftime("%H:%M:%S"))
     plt.clim(1e11,3.7e11)
     cbarlab="$n_e$ (m$^{-3}$)"
     cbar=plt.colorbar(label=cbarlab)
-    #ax=plt.gca()
-    #ax.set_aspect("equal")
+    ax=plt.gca()
+    ax.set_aspect(10)
     plt.show(block=False)
     simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()
-    simtimestr=str(simtime)
-    simtimestr=padstr(simtimestr)
-    plt.savefig(plotdir+"/"+parmlbl+simtimestr+"s_large.png")
+    plt.savefig(plotdir+"/"+parmlbl+str(simtime)+"s_large.png")
 
-    plt.figure(num=2,dpi=150)
-    plt.clf()
-    #cmap=plt.get_cmap("coolwarm")
-    cmap = plt.get_cmap("viridis")
-    plt.pcolormesh((x-xnow)/1e3,y/1e3,neplot.transpose(),cmap=cmap, shading="auto")
-    plt.xlim(-60,0)
-    plt.ylim(-25,-10)
-    plt.xlabel("x (km)")
-    plt.ylabel("y (km)")
-    plt.title(cfg["time"][it].strftime("%H:%M:%S"))
-    plt.clim(1e11,3.7e11)
-    cbarlab="$n_e$ (m$^{-3}$)"
-    cbar=plt.colorbar(label=cbarlab)
-    #ax=plt.gca()
-    #ax.set_aspect("equal")
-    plt.show(block=False)
-    simtimestr=str(simtime)
-    simtimestr=padstr(simtimestr)
-    simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()
-    plt.savefig(plotdir+"/"+parmlbl+simtimestr+"s_small.png")
-
+#    plt.figure(dpi=150)
+#    #cmap=plt.get_cmap("coolwarm")
+#    cmap = plt.get_cmap("viridis")
+#    plt.pcolormesh((x-xnow)/1e3,y/1e3,neplot.transpose(),cmap=cmap)
+#    plt.xlim(-60,20)
+#    plt.ylim(-1,1)
+#    plt.xlabel("x (km)")
+#    plt.ylabel("y (km)")
+#    plt.title(cfg["time"][it].strftime("%H:%M:%S"))
+#    plt.clim(1e11,3.7e11)
+#    cbarlab="$n_e$ (m$^{-3}$)"
+#    cbar=plt.colorbar(label=cbarlab)
+#    #ax=plt.gca()
+#    #ax.set_aspect("equal")
+#    plt.show(block=False)
+#    simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()
+#    plt.savefig(plotdir+"/"+parmlbl+str(simtime)+"s_small.png")
