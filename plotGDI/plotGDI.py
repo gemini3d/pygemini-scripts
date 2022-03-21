@@ -3,14 +3,8 @@ import gemini3d.read
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from plotGDI_tools import padstr
 
-def padstr(simtimestr):
-    simtimestrout=simtimestr
-    if simtime<100:
-        simtimestrout="0"+simtimestrout
-    if simtime<10:
-        simtimestrout="0"+simtimestrout
-    return simtimestrout
 
 # set some font sizes
 SMALL_SIZE = 14
@@ -84,7 +78,7 @@ for it in its:
     plt.show(block=False)
     simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()
     simtimestr=str(simtime)
-    simtimestr=padstr(simtimestr)
+    simtimestr=padstr(simtime,simtimestr)
     plt.savefig(plotdir+"/"+parmlbl+simtimestr+"s_large.png")
 
     plt.figure(num=2,dpi=150)
@@ -104,7 +98,7 @@ for it in its:
     #ax.set_aspect("equal")
     plt.show(block=False)
     simtimestr=str(simtime)
-    simtimestr=padstr(simtimestr)
+    simtimestr=padstr(simtime,simtimestr)
     simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()
     plt.savefig(plotdir+"/"+parmlbl+simtimestr+"s_small.png")
 

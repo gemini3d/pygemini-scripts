@@ -3,6 +3,8 @@ import gemini3d.read
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from plotGDI_tools import padstr
+
 
 # set some font sizes
 SMALL_SIZE = 14
@@ -19,7 +21,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # location of simulation output
 home=os.path.expanduser("~")
-direc = home+"/simulations/raid/GDI_MR_small_logp/"
+direc = home+"/simulations/raid/Highres_50m_40/"
 plotdir=direc+"/customplots/"
 if not os.path.isdir(plotdir):
     os.mkdir(plotdir)
@@ -57,10 +59,10 @@ for it in its:
     xnow=0
 
     #plt.figure(dpi=150)
-    #cmap = plt.get_cmap("coolwarm")
+    cmap = plt.get_cmap("coolwarm")
     plt.clf();
-    cmap = plt.get_cmap("viridis")
-    plt.pcolormesh((x - xnow) / 1e3, y / 1e3, neplot.transpose(), cmap=cmap)
+    #cmap = plt.get_cmap("viridis")
+    plt.pcolormesh((x - xnow) / 1e3, y / 1e3, neplot.transpose(), cmap=cmap, shading="auto")
     plt.xlim(-75, 50)
     plt.xlabel("x (km)")
     plt.ylabel("y (km)")
@@ -72,8 +74,9 @@ for it in its:
     ax.set_aspect(10)
     plt.show(block=False)
     simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()
-    plt.savefig(plotdir+"/"+parmlbl+str(simtime)+"s_large.png")
-
+    simtimestr=str(simtime)
+    simtimestr=padstr(simtime,simtimestr)
+    plt.savefig(plotdir+"/"+parmlbl+simtimestr+"s_large.png")
 #    plt.figure(dpi=150)
 #    #cmap=plt.get_cmap("coolwarm")
 #    cmap = plt.get_cmap("viridis")
