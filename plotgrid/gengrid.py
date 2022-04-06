@@ -5,15 +5,15 @@ from matplotlib.pyplot import show
 
 # %% generate a 3D grid
 cfg = {
-    "dtheta": 11,
-    "dphi": 105,
+    "dtheta": 4.5,
+    "dphi": 90,
     "lp": 128,
     "lq": 256,
-    "lphi": 128,
+    "lphi": 64,
     "altmin": 80e3,
-    "glat": 56,
-    "glon": 0,
-    "gridflag": 0,
+    "glat": 30,
+    "glon": 143.4,
+    "gridflag": 1,
     "openparm": 50,
 }
 xg = tilted_dipole3d(cfg)
@@ -23,15 +23,15 @@ plotoutline3D(xg)
 
 # %% generate a 2D grid
 cfg = {
-    "dtheta": 11,
+    "dtheta": 4.5,
     "dphi": 105,
     "lp": 128,
     "lq": 256,
     "lphi": 1,
     "altmin": 80e3,
-    "glat": 56,
-    "glon": 0,
-    "gridflag": 0,
+    "glat": 30,
+    "glon": 143.4,
+    "gridflag": 1,
     "openparm": 50,
 }
 xg = tilted_dipole3d(cfg)

@@ -14,7 +14,7 @@ from gemini3d.grid.gridmodeldata import model2magcoords,model2geogcoords
 direc = "~/simulations/raid/aurora_EISCAT3D_simple_wide/"
 cfg = read.config(direc)
 xg = read.grid(direc)
-parm="ne"
+parm="Ti"
 dat = read.frame(direc, cfg["time"][-1], var=parm)
 
 # these plotting functions will internally grid data

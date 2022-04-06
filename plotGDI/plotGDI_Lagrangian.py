@@ -21,8 +21,8 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # location of simulation output
 home=os.path.expanduser("~")
-direc = home+"/simulations/raid/Highres_50m_40/"
-plotdir=direc+"/customplots/"
+direc = home+"/simulations/raid/TGI_MR/"
+plotdir=direc+"/customplots2/"
 if not os.path.isdir(plotdir):
     os.mkdir(plotdir)
 parmlbl="ne"
@@ -63,15 +63,16 @@ for it in its:
     plt.clf();
     #cmap = plt.get_cmap("viridis")
     plt.pcolormesh((x - xnow) / 1e3, y / 1e3, neplot.transpose(), cmap=cmap, shading="auto")
-    plt.xlim(-75, 50)
+    #plt.xlim(-75, 50)
+    plt.xlim(-37.5,37.5)
     plt.xlabel("x (km)")
     plt.ylabel("y (km)")
     plt.title(cfg["time"][it].strftime("%H:%M:%S"))
-    plt.clim(1e11,3.7e11)
+    plt.clim(1e11,5e11)
     cbarlab="$n_e$ (m$^{-3}$)"
     cbar=plt.colorbar(label=cbarlab)
     ax=plt.gca()
-    ax.set_aspect(10)
+    ax.set_aspect(5)
     plt.show(block=False)
     simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()
     simtimestr=str(simtime)

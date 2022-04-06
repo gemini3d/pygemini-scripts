@@ -19,7 +19,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # location of simulation output
 home=os.path.expanduser("~")
-direc = home+"/simulations/GDI_toyproblem/"
+direc = home+"/simulations/raid/GDI_toyproblem_fieldresolved/"
 plotdir=direc+"/customplots/"
 if not os.path.isdir(plotdir):
     os.mkdir(plotdir)
@@ -65,7 +65,7 @@ for it in its:
     plt.xlabel("x (km)")
     plt.ylabel("y (km)")
     plt.title(cfg["time"][it].strftime("%H:%M:%S"))
-    plt.clim(1e11,3.7e11)
+    plt.clim(1e11,5e11)
     cbarlab="$n_e$ (m$^{-3}$)"
     cbar=plt.colorbar(label=cbarlab)
     ax=plt.gca()

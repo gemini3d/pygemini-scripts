@@ -1,12 +1,16 @@
+from __future__ import annotations
 import numpy as np
 from matplotlib.pyplot import figure
 import typing as T
+import argparse
+import typing as T
+
 
 
 def plotoutline2D(xg: dict[str, T.Any]):
     """plot an outline of a 2D grid in mlat and altitude"""
 
-    mlat = np.degrees(90 - xg["theta"])
+    mlat = np.degrees(np.pi/2.0 - xg["theta"])
     alt = xg["alt"]
 
     fg = figure(dpi=100)
@@ -24,7 +28,7 @@ def plotoutline3D(xg: dict[str, T.Any]):
     """plot 3D grid outline"""
 
     mlon = np.degrees(xg["phi"])
-    mlat = np.degrees(90 - xg["theta"])
+    mlat = np.degrees(np.pi/2.0 - xg["theta"])
     alt = xg["alt"]
 
     fg = figure(dpi=150)
