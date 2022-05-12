@@ -49,7 +49,9 @@ def Ry(alpha):
     R[2,2]=cos(alpha)
     return R
 
-# Rotation matrix to go from geographic to geomagnetic
+# Rotation matrix to go from geographic to geomagnetic coordinates; note the
+#   rotation is done with angles -phin and -thetan so the transpose of the
+#   standard rotation matrices are used
 def Rgg2gm():    
     return (Ry(thetan)).transpose()@(Rz(phin)).transpose()
 
