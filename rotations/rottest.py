@@ -40,16 +40,16 @@ def Rz(alpha):
     
 def Ry(alpha):
     R=np.zeros((3,3))
-    R[0,0]=cos(thetan)
-    R[0,2]=sin(thetan)
+    R[0,0]=cos(alpha)
+    R[0,2]=sin(alpha)
     R[1,1]=1
-    R[2,0]=-sin(thetan)
-    R[2,2]=cos(thetan)
+    R[2,0]=-sin(alpha)
+    R[2,2]=cos(alpha)
     return R
 
 # Rotation matrix to go from geographic to geomagnetic
 def Rgg2gm():    
-    return Ry(thetan)@Rz(phin)
+    return (Ry(thetan)).transpose()@(Rz(phin)).transpose()
 
 
 # Transform ECEF geographic to ECEF geomagnetic
@@ -58,8 +58,8 @@ def rotgeog2geomag(r):
 
 
 ##############################################################################
-glat=90-12
-glon=288
+glat=45
+glon=45
 thetag=pi/2-glat*pi/180
 phig=glon*pi/180
 rg=Re
