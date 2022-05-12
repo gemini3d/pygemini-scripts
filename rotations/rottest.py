@@ -28,6 +28,7 @@ def cart2spherical(x,y,z):
     return np.array([r,theta,phi])
 
 
+# Rotation about z axis with angle alpha
 def Rz(alpha):
     R=np.zeros((3,3))
     R[0,0]=cos(alpha)
@@ -37,7 +38,8 @@ def Rz(alpha):
     R[2,2]=1
     return R
     
-    
+
+# Rotation about y axis by angle alpha
 def Ry(alpha):
     R=np.zeros((3,3))
     R[0,0]=cos(alpha)
