@@ -60,3 +60,8 @@ def Rgm2gg():
 def rotgeog2geomag(xgg,ygg,zgg):
     r=np.array([xgg,ygg,zgg])
     return Rgg2gm()@r
+
+# Transform ECEF geomagnetic to ECEF geographic
+def rotgeomag2geog(xgm,ygm,zgm):
+    r=np.array([xgm,ygm,zgm])
+    return Rgm2gg()@r
