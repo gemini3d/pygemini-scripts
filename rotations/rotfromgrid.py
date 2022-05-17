@@ -7,12 +7,13 @@ Created on Fri May 13 09:04:24 2022
 """
 
 import gemini3d.read
-from rotfns import rotgeomag2geog,Rgm2gg
+from rotfns import Rgm2gg
 import numpy as np
+from numpy import pi,sin,cos
 import matplotlib.pyplot as plt
 
 print("Reading data...")
-direc="~/simulations/aurora_EISCAT3D_simple_wide/"
+direc="~/simulations/raid/aurora_EISCAT3D_simple_wide/"
 cfg=gemini3d.read.config(direc)
 xg=gemini3d.read.grid(direc)
 dat=gemini3d.read.frame(direc,time=cfg["time"][-1])
@@ -20,7 +21,7 @@ dat=gemini3d.read.frame(direc,time=cfg["time"][-1])
 lx1=xg["lx"][0]; lx2=xg["lx"][1]; lx3=xg["lx"][2];
 
 # convert vectors in model basis to geomagnetic ECEF comps. using stored unit vectors
-print("Rotate internal coords to geomag. ECEF...")
+print("Rotate internal coords to geomag. spherical...")
 vrgm=( np.sum(xg["e1"]*xg["er"],3)*dat["v1"] + np.sum(xg["e2"]*xg["er"],3)*dat["v2"] + 
     np.sum(xg["e3"]*xg["er"],3)*dat["v3"] )
 vthetagm=( np.sum(xg["e1"]*xg["etheta"],3)*dat["v1"] + np.sum(xg["e2"]*xg["etheta"],3)*dat["v2"] +
@@ -28,16 +29,35 @@ vthetagm=( np.sum(xg["e1"]*xg["etheta"],3)*dat["v1"] + np.sum(xg["e2"]*xg["ethet
 vphigm=( np.sum(xg["e1"]*xg["ephi"],3)*dat["v1"] + np.sum(xg["e2"]*xg["ephi"],3)*dat["v2"] + 
     np.sum(xg["e3"]*xg["ephi"],3)*dat["v3"] )
 
+# At this point the components are in geomagnetic spherical
+print("Convert geomagnetic spherical to geomagnetic ECEF (Cartesian)")
+vxgm=vrgm*xg["er"][:,:,:,0]+vthetagm*xg["etheta"][:,:,:,0]+vphigm*xg["ephi"][:,:,:,0]
+vygm=vrgm*xg["er"][:,:,:,1]+vthetagm*xg["etheta"][:,:,:,1]+vphigm*xg["ephi"][:,:,:,1]
+vzgm=vrgm*xg["er"][:,:,:,2]+vthetagm*xg["etheta"][:,:,:,2]+vphigm*xg["ephi"][:,:,:,2]
+
 # now rotation geomagnetic ECEF into geographic ECEF one grid location at a time
 print("Rotate geomag ECEF to geographic ECEF...")
-vrgmflat=np.reshape(np.array(vrgm),[1,lx1*lx2*lx3],order='F')
-vthetagmflat=np.reshape(np.array(vthetagm),[1,lx1*lx2*lx3],order='F')
-vphigmflat=np.reshape(np.array(vphigm),[1,lx1*lx2*lx3],order='F')
-vgm=np.concatenate((vrgmflat,vthetagmflat,vphigmflat), axis=0)
+vxgmflat=np.reshape(np.array(vxgm),[1,lx1*lx2*lx3],order='F')
+vygmflat=np.reshape(np.array(vygm),[1,lx1*lx2*lx3],order='F')
+vzgmflat=np.reshape(np.array(vzgm),[1,lx1*lx2*lx3],order='F')
+vgm=np.concatenate((vxgmflat,vygmflat,vzgmflat), axis=0)
 vgg=Rgm2gg()@vgm
-vrgg=np.reshape(vgg[0,:],[lx1,lx2,lx3],order='F')
-vthetagg=np.reshape(vgg[1,:],[lx1,lx2,lx3],order='F')
-vphigg=np.reshape(vgg[2,:],[lx1,lx2,lx3],order='F')
+vxgg=np.reshape(vgg[0,:],[lx1,lx2,lx3],order='F')
+vygg=np.reshape(vgg[1,:],[lx1,lx2,lx3],order='F')
+vzgg=np.reshape(vgg[2,:],[lx1,lx2,lx3],order='F')
+
+# finally we want to convert to geographic spherical
+print("Convert geographic ECEF to geographic spherical")
+thetagg=pi/2-xg["glat"]*pi/180
+phigg=xg["glon"]*pi/180
+vrgg=sin(thetagg)*cos(phigg)*vxgg+sin(thetagg)*sin(phigg)*vygg+cos(thetagg)*vzgg
+vthetagg=cos(thetagg)*cos(phigg)*vxgg+cos(thetagg)*sin(phigg)*vygg-sin(thetagg)*vzgg
+vphigg=-sin(phigg)*vxgg+cos(phigg)*vygg
+
+# check magnitudes
+vmaggg=np.sqrt(vrgg**2+vthetagg**2+vphigg**2)
+vmaggm=np.sqrt(vrgm**2+vthetagm**2+vphigm**2)
+print("Magnitude comparison test:  ",vmaggm-vmaggg)
 
 # plot a "center cut"
 plt.subplots(3,3)
