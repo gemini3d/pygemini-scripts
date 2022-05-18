@@ -7,18 +7,43 @@ Created on Fri May 13 09:04:24 2022
 """
 
 import gemini3d.read
-from rotfns import Rgm2gg
+from rotfns import Rgm2gg,Rgg2gm
 import numpy as np
 from numpy import pi,sin,cos
 import matplotlib.pyplot as plt
 
+##############################################################################
+# defs
+##############################################################################
+def rotvec_gg2gm(e):
+    [lx1,lx2,lx3,lcomp]=e.shape
+    ex=np.array(e[:,:,:,0])
+    ey=np.array(e[:,:,:,1])
+    ez=np.array(e[:,:,:,2])
+    exflat=np.reshape(ex,[1,lx1*lx2*lx3],order="F")
+    eyflat=np.reshape(ey,[1,lx1*lx2*lx3],order="F")
+    ezflat=np.reshape(ez,[1,lx1*lx2*lx3],order="F")
+    emat=np.concatenate((exflat,eyflat,ezflat), axis=0)
+    egg=Rgg2gm()@emat
+    eggshp=np.zeros((lx1,lx2,lx3,3))
+    eggshp[:,:,:,0]=np.reshape(egg[0,:],[lx1,lx2,lx3],order="F")
+    eggshp[:,:,:,1]=np.reshape(egg[1,:],[lx1,lx2,lx3],order="F")
+    eggshp[:,:,:,2]=np.reshape(egg[2,:],[lx1,lx2,lx3],order="F")    
+    return eggshp
+#############################################################################
+
+
 print("Reading data...")
-direc="~/simulations/raid/aurora_EISCAT3D_simple_wide/"
+direc="~/simulations/aurora_EISCAT3D_simple_wide/"
 cfg=gemini3d.read.config(direc)
 xg=gemini3d.read.grid(direc)
 dat=gemini3d.read.frame(direc,time=cfg["time"][-1])
 
 lx1=xg["lx"][0]; lx2=xg["lx"][1]; lx3=xg["lx"][2];
+
+##############################################################################
+# the long way
+##############################################################################
 
 # convert vectors in model basis to geomagnetic ECEF comps. using stored unit vectors
 print("Rotate internal coords to geomag. spherical...")
@@ -97,6 +122,58 @@ plt.colorbar()
 plt.subplot(3,3,7)
 plt.pcolormesh(dat["v3"][:,:,64])
 plt.colorbar()
+##############################################################################
+
+##############################################################################
+# Could also precompute projections like in fortran code by computing geographic unit vectors
+#   in geomagnetic ECEF components.  This can be done by:
+#   spherical gm comps -> ECEF gm comps -> ECEF gg comps -> spherical gg comps
+#   For this case the final results will be gg unit vecs but in gm ECEF comps.
+#   Or we can just generate the geographic unit vectors and rotate those into
+#   a the ECEF geomag system.  
+##############################################################################
+thetagg=pi/2-xg["glat"]*pi/180
+phigg=xg["glon"]*pi/180
+
+ergg=np.empty((lx1,lx2,lx3,3))
+ethetagg=np.empty((lx1,lx2,lx3,3))
+ephigg=np.empty((lx1,lx2,lx3,3))
+ergg[:,:,:,0]=sin(thetagg)*cos(phigg)
+ergg[:,:,:,1]=sin(thetagg)*sin(phigg)
+ergg[:,:,:,2]=cos(thetagg)
+ethetagg[:,:,:,0]=cos(thetagg)*cos(phigg)
+ethetagg[:,:,:,1]=cos(thetagg)*sin(phigg)
+ethetagg[:,:,:,2]=-sin(thetagg)
+ephigg[:,:,:,0]=-sin(phigg)
+ephigg[:,:,:,1]=cos(phigg)
+ephigg[:,:,:,2]=np.zeros(thetagg.shape)
+
+ergg2gm=rotvec_gg2gm(ergg)
+ethetagg2gm=rotvec_gg2gm(ethetagg)
+ephigg2gm=rotvec_gg2gm(ephigg)
+
+print("Rotate internal coords to geographic spherical directly using geograhpic unit vecs...")
+vrgg2=( np.sum(xg["e1"]*ergg2gm,3)*dat["v1"] + np.sum(xg["e2"]*ergg2gm,3)*dat["v2"] + 
+    np.sum(xg["e3"]*ergg2gm,3)*dat["v3"] )
+vthetagg2=( np.sum(xg["e1"]*ethetagg2gm,3)*dat["v1"] + np.sum(xg["e2"]*ethetagg2gm,3)*dat["v2"] +
+    np.sum(xg["e3"]*ethetagg2gm,3)*dat["v3"] )
+vphigg2=( np.sum(xg["e1"]*ephigg2gm,3)*dat["v1"] + np.sum(xg["e2"]*ephigg2gm,3)*dat["v2"] + 
+    np.sum(xg["e3"]*ephigg2gm,3)*dat["v3"] )
+
+plt.subplots(3,1)
+
+plt.subplot(3,1,1)
+plt.pcolormesh(vrgg2[:,:,64])
+plt.colorbar()
+
+plt.subplot(3,1,2)
+plt.pcolormesh(vthetagg2[:,:,64])
+plt.colorbar()
+
+plt.subplot(3,1,3)
+plt.pcolormesh(vphigg2[:,:,64])
+plt.colorbar()
+##############################################################################
 
 #  This is amazingly slow...
 # vrgg=np.zeros( (lx1,lx2,lx3) )
