@@ -34,7 +34,7 @@ def rotvec_gg2gm(e):
 
 
 print("Reading data...")
-direc="~/simulations/aurora_EISCAT3D_simple_wide/"
+direc="~/simulations/raid/aurora_EISCAT3D_simple_wide/"
 cfg=gemini3d.read.config(direc)
 xg=gemini3d.read.grid(direc)
 dat=gemini3d.read.frame(direc,time=cfg["time"][-1])
@@ -82,7 +82,7 @@ vphigg=-sin(phigg)*vxgg+cos(phigg)*vygg
 # check magnitudes
 vmaggg=np.sqrt(vrgg**2+vthetagg**2+vphigg**2)
 vmaggm=np.sqrt(vrgm**2+vthetagm**2+vphigm**2)
-print("Magnitude comparison test:  ",vmaggm-vmaggg)
+print("Magnitude comparison test:  ",((vmaggm-vmaggg)/vmaggg).max())
 
 # plot a "center cut"
 plt.subplots(3,3)
