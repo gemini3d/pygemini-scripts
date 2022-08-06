@@ -47,7 +47,7 @@ x0 = -180e3  # initial patch position
 t0 = cfg["time"][0]
 
 # load data from a specified set of time indices
-its=range(0,640,1)
+its=range(0,len(cfg['time']))
 plt.figure(dpi=150)
 for it in its:
     print("Loading:  ",cfg["time"][it])
