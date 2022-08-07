@@ -1,5 +1,7 @@
 def padstr(simtime,simtimestr):
     simtimestrout=simtimestr
+    if simtime<1000:
+        simtimestrout="0"+simtimestrout    
     if simtime<100:
         simtimestrout="0"+simtimestrout
     if simtime<10:

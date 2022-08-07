@@ -21,7 +21,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # location of simulation output
 home=os.path.expanduser("~")
-direc = home+"/simulations/raid/TGI_MR/"
+direc = home+"/simulations/raid/RISR_data/"
 plotdir=direc+"/customplots2/"
 if not os.path.isdir(plotdir):
     os.mkdir(plotdir)
