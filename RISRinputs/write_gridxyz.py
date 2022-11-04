@@ -9,7 +9,7 @@ Created on Fri Aug  5 19:46:12 2022
 import h5py
 import gemini3d.read
 
-direc="/Users/zettergm/simulations/RISR_staging/"
+direc="/Users/zettergm/simulations/raid/RISR_staging_data_highres/"
 xg=gemini3d.read.grid(direc)
 z=xg["x1"][2:-2]
 x=xg["x2"][2:-2]

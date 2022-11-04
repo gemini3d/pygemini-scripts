@@ -21,8 +21,8 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # location of simulation output
 home=os.path.expanduser("~")
-direc = home+"/simulations/raid/GDI_round_strong8/"
-plotdir=direc+"/customplots2/"
+direc = home+"/simulations/raid/RISR_data/"
+plotdir=direc+"/customplots3/"
 if not os.path.isdir(plotdir):
     os.mkdir(plotdir)
 parmlbl="ne"
@@ -41,13 +41,13 @@ ialt = np.argmin(abs(z - altref), axis=0)
 
 # input electric field and drifts
 Bmag = 50000e-9
-Ey = -45e-3
+Ey = -43.8e-3
 vx = -Ey / Bmag  # prescribed background drift of patch
 x0 = -180e3  # initial patch position
 t0 = cfg["time"][0]
 
 # load data from a specified set of time indices
-its=range(0,len(cfg['time']))
+its=range(0,640,1)
 plt.figure(dpi=150)
 for it in its:
     print("Loading:  ",cfg["time"][it])
@@ -64,14 +64,13 @@ for it in its:
     #cmap = plt.get_cmap("viridis")
     plt.pcolormesh((x - xnow) / 1e3, y / 1e3, neplot.transpose(), cmap=cmap, shading="auto")
     #plt.xlim(-75, 50)
-    #plt.xlim(-37.5,37.5)
-    plt.xlim(-200,200)
-    plt.ylim(-200,200)
+#    plt.xlim(-400,400)
+    plt.xlim(-250,50)
+    plt.ylim(-50,250)
     plt.xlabel("x (km)")
     plt.ylabel("y (km)")
     plt.title(cfg["time"][it].strftime("%H:%M:%S"))
-#    plt.clim(1e11,5e11)
-    plt.clim(0.5e11,2.4e11)
+    plt.clim(1e11,3e11)
     cbarlab="$n_e$ (m$^{-3}$)"
     cbar=plt.colorbar(label=cbarlab)
     ax=plt.gca()
