@@ -5,6 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from plotGDI_tools import padstr
 
+plt.ioff()    # so matplotlib doesn't take over the entire computer :(
+flagquiver=False
 
 # set some font sizes
 SMALL_SIZE = 14
@@ -21,8 +23,13 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # location of simulation output
 home=os.path.expanduser("~")
-direc = home+"/simulations/ssd/GDI_round/"
-plotdir=direc+"/customplots_new/"
+direc = home+"/simulations/ssd/GDI_round_largedz_1.5km/"
+if (flagquiver): 
+    plotdir=direc+"/customplots_quiver/"
+else:
+    plotdir=direc+"/customplots_noquiver/"
+    
+    
 if not os.path.isdir(plotdir):
     os.mkdir(plotdir)
 parmlbl="ne"
@@ -47,7 +54,8 @@ x0 = -180e3  # initial patch position
 t0 = cfg["time"][0]
 
 # load data from a specified set of time indices
-its=range(0,len(cfg['time']))
+its=range(0,len(cfg["time"]))
+#its=range(len(cfg["time"])//4-1,len(cfg["time"])//4)
 plt.figure(dpi=150)
 for it in its:
     print("Loading:  ",cfg["time"][it])
@@ -57,44 +65,31 @@ for it in its:
     deltat=(cfg["time"][it]-t0).total_seconds()
     #xnow=x0+vx*deltat      # present center position of patch
     xnow=0
+    
+    v2plot=np.array(dat["v2"])[ialt,:,:]
+    v3plot=np.array(dat["v3"])[ialt,:,:]  
+    stride=10
 
-    #plt.figure(dpi=150)
     cmap = plt.get_cmap("coolwarm")
     plt.clf();
-    #cmap = plt.get_cmap("viridis")
     plt.pcolormesh((x - xnow) / 1e3, y / 1e3, neplot.transpose(), cmap=cmap, shading="auto")
-    #plt.xlim(-75, 50)
-    #plt.xlim(-37.5,37.5)
+    cbarlab="$n_e$ (m$^{-3}$)"
+    plt.clim(0.5e11,1.75e11)
+    cbar=plt.colorbar(label=cbarlab,cmap=cmap)
+    if (flagquiver):
+        plt.quiver((x[0:x.size:stride] - xnow) / 1e3, y[0:y.size:stride] / 1e3, 
+                   v2plot.transpose()[0:x.size:stride,0:y.size:stride], 
+                   v3plot.transpose()[0:x.size:stride,0:y.size:stride], color="white")
     plt.xlim(-200,200)
     plt.ylim(-200,200)
     plt.xlabel("x (km)")
     plt.ylabel("y (km)")
     plt.title(cfg["time"][it].strftime("%H:%M:%S"))
-#    plt.clim(1e11,5e11)
-    plt.clim(0.5e11,2.4e11)
-    cbarlab="$n_e$ (m$^{-3}$)"
-    cbar=plt.colorbar(label=cbarlab)
     ax=plt.gca()
     #ax.set_aspect(5)
-    plt.show(block=False)
+    #plt.show(block=False)
     simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()
     simtimestr=str(simtime)
     simtimestr=padstr(simtime,simtimestr)
     plt.savefig(plotdir+"/"+parmlbl+simtimestr+"s_large.png")
-#    plt.figure(dpi=150)
-#    #cmap=plt.get_cmap("coolwarm")
-#    cmap = plt.get_cmap("viridis")
-#    plt.pcolormesh((x-xnow)/1e3,y/1e3,neplot.transpose(),cmap=cmap)
-#    plt.xlim(-60,20)
-#    plt.ylim(-1,1)
-#    plt.xlabel("x (km)")
-#    plt.ylabel("y (km)")
-#    plt.title(cfg["time"][it].strftime("%H:%M:%S"))
-#    plt.clim(1e11,3.7e11)
-#    cbarlab="$n_e$ (m$^{-3}$)"
-#    cbar=plt.colorbar(label=cbarlab)
-#    #ax=plt.gca()
-#    #ax.set_aspect("equal")
-#    plt.show(block=False)
-#    simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()
-#    plt.savefig(plotdir+"/"+parmlbl+str(simtime)+"s_small.png")
+
