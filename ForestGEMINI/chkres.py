@@ -3,6 +3,8 @@
 """
 Created on Fri Oct  6 16:20:57 2023
 
+Create a grid for the AIRWaveS misty picture experiment.  
+
 @author: zettergm
 """
 
@@ -15,8 +17,10 @@ import xarray
 
 flagplot=False
 
-cfg=gemini3d.read.config("~/Projects/gemini-examples/init/misty/config.nml")
-xg=gemini3d.grid.tilted_dipole.tilted_dipole3d(cfg)
+#cfg=gemini3d.read.config("~/Projects/gemini-examples/init/misty/config.nml")
+cfg=gemini3d.read.config("~/Projects/gemini-examples/init/CGCAM_NZ/config.nml")
+#xg=gemini3d.grid.tilted_dipole.tilted_dipole3d(cfg)
+xg=gemini3d.grid.tilted_dipole.tilted_dipole3d_NUx2(cfg)
 
 dl1=xg["dx1h"]*xg["h1"][2:-2,0,0]/1e3
 dl1_var=xg["dx1h"]*xg["h1"][2:-2,-1,-1]/1e3
@@ -39,12 +43,12 @@ for i in range(0,xg["lx"][1]):
 dl2=np.empty(xg["lx"])
 for k in range(0,xg["lx"][0]):
     for j in range(0,xg["lx"][2]):
-        dl2[k,:,j]=xg["dx2h"]*xg["h2"][k+2,2:-2,j+2]   # offset for ghost cells
+        dl2[k,:,j]=xg["dx2h"]*xg["h2"][k+2,2:-2,j+2]/1e3   # offset for ghost cells
 
 dl3=np.empty(xg["lx"])
 for k in range(0,xg["lx"][0]):
     for i in range(0,xg["lx"][1]):
-        dl3[k,i,:]=xg["dx2h"]*xg["h2"][k+2,i+2,2:-2]   # offset for ghost cells
+        dl3[k,i,:]=xg["dx3h"]*xg["h2"][k+2,i+2,2:-2]/1e3   # offset for ghost cells
 
 # sample differential lengths at fixed heights of interest to AIRWaveS
 thlims=np.array([np.min(xg["theta"]), np.max(xg["theta"]) ])
@@ -94,4 +98,21 @@ plt.pcolormesh(mloni,mlati,dl3i[1,:,:].transpose())
 plt.colorbar()
 plt.title("$dl_3$ (km), level 0 at 300 km altitude")
 
+###############################################################################
+#  FIGMENTS/ForestGEMINI misty picture test
+###############################################################################
+#
+# For 8x8 patches and level 3 initial refinement (or mi=mj=8 and lvl 0 initial refine) 
+#   we are going to need an additional 4 levels of refinement
+#
+# The goal is ~1km resolution (max) and a grid extent covering:  320km radius in x-y plane
+#   This corresponds to about 8 degrees mlat/mlon
+###############################################################################
 
+
+###############################################################################
+#  CGCAM testing
+###############################################################################
+#   Targetting resolution of 4x4x4 km means we need a grid of about
+#     512**3; 384**3 may also be acceptable for initial tests
+###############################################################################

@@ -9,7 +9,8 @@ from matplotlib.pyplot import show
 from gemini3d.grid.gridmodeldata import model2magcoords
 
 # load some sample data (2D)
-direc = "~/simulations/raid/EIAnowinds/"
+#direc = "~/simulations/raid/EIAnowinds/"
+direc = "~/simulations/raid2/simulations_eclipse/Oct2023_eclipse_solmax_control/"
 cfg = gemini3d.read.config(direc)
 xg = gemini3d.read.grid(direc)
 dat = gemini3d.read.frame(direc, cfg["time"][-1])
