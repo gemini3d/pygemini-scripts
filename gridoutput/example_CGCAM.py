@@ -16,11 +16,13 @@ import os
 
 def padstr(simtime,simtimestr):
     simtimestrout=simtimestr
-    if simtime<1000:
-        simtimestrout="0"+simtimestrout    
-    if simtime<100:
-        simtimestrout="0"+simtimestrout
     if simtime<10:
+        simtimestrout="0000"+simtimestrout
+    elif simtime<100:
+        simtimestrout="000"+simtimestrout
+    elif simtime<1000:
+        simtimestrout="00"+simtimestrout
+    elif simtime<10000:
         simtimestrout="0"+simtimestrout
     return simtimestrout
 
@@ -42,6 +44,7 @@ plotdir=direc+"/plotsdiff/"
 if not os.path.isdir(plotdir):
     os.mkdir(plotdir)
 
+plt.ioff()    # so matplotlib doesn't take over the entire computer :(
 plt.figure(dpi=150)
 for it in range(0,lt):
 # regrid data in geographic
@@ -67,7 +70,8 @@ for it in range(0,lt):
     plt.colorbar()
     plt.ylabel("latitude")
     plt.xlabel("longitude")
-    plt.title("percent variation in $n_e$ @ 300 km altitude")
+    simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()+7200
+    plt.title("$\Delta n_e$ @ 300 km altitude (pct.):  "+str(simtime/60)+" min.")
     
     # plt.figure(dpi=150)
     # dataplot=np.squeeze(parmgi[:,:,llat//2])
@@ -76,9 +80,8 @@ for it in range(0,lt):
     # plt.xlabel("longitude")
     # plt.ylabel("altitude")
     
-    simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()
     simtimestr=str(simtime)
     simtimestr=padstr(simtime,simtimestr)
-    plt.savefig(plotdir+"/"+parmlbl+simtimestr+"s_large.png")
+    plt.savefig(plotdir+"/"+parmlbl+simtimestr+"s.png")
         
 
