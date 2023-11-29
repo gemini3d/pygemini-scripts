@@ -4,7 +4,7 @@
 """
 
 import gemini3d.read
-from plotcurv import plotcurv2D
+#from plotcurv import plotcurv2D
 import matplotlib.pyplot as plt
 from gemini3d.grid.gridmodeldata import model2magcoords,model2geogcoords
 import numpy as np
@@ -16,6 +16,10 @@ direc = "~/simulations/raid2/simulations_eclipse/Oct2023_eclipse_solmax_control/
 direc2 = "~/simulations/raid2/simulations_eclipse/Oct2023_eclipse_solmax/"
 direc3 = "~/simulations/raid2/simulations_eclipse/Oct2023_eclipse_solmin_control/"
 direc4 = "~/simulations/raid2/simulations_eclipse/Oct2023_eclipse_solmin/"
+# direc = "~/simulations/raid2/simulations_eclipse/Oct2023_eclipse_solmax_20/"
+# direc2 = "~/simulations/raid2/simulations_eclipse/Oct2023_eclipse_solmax/"
+# direc3 = "~/simulations/raid2/simulations_eclipse/Oct2023_eclipse_solmin_20/"
+# direc4 = "~/simulations/raid2/simulations_eclipse/Oct2023_eclipse_solmin/"
 cfg = gemini3d.read.config(direc)
 print("Time frame for comparison:  ",cfg["time"][86])
 xg = gemini3d.read.grid(direc)
