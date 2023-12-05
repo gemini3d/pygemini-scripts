@@ -21,7 +21,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # location of simulation output
 home=os.path.expanduser("~")
-direc = home+"/simulations/raid/RISR_data/"
+direc = home+"/simulations/raid2/simulations_MR/1849_Eulerian_MZ_large/"
 plotdir=direc+"/customplots3/"
 if not os.path.isdir(plotdir):
     os.mkdir(plotdir)
@@ -41,7 +41,7 @@ ialt = np.argmin(abs(z - altref), axis=0)
 
 # input electric field and drifts
 Bmag = 50000e-9
-Ey = -43.8e-3
+Ey = -33.5e-3
 vx = -Ey / Bmag  # prescribed background drift of patch
 x0 = -180e3  # initial patch position
 t0 = cfg["time"][0]
@@ -49,14 +49,15 @@ t0 = cfg["time"][0]
 # load data from a specified set of time indices
 its=range(0,640,1)
 plt.figure(dpi=150)
+plt.ioff()
 for it in its:
     print("Loading:  ",cfg["time"][it])
     dat=gemini3d.read.frame(direc,cfg["time"][it])
     ne=np.array(dat["ne"])
     neplot=ne[ialt,:,:]
     deltat=(cfg["time"][it]-t0).total_seconds()
-    #xnow=x0+vx*deltat      # present center position of patch
-    xnow=0
+    xnow=x0+vx*deltat      # present center position of patch
+    #xnow=0
 
     #plt.figure(dpi=150)
     cmap = plt.get_cmap("coolwarm")
@@ -65,17 +66,17 @@ for it in its:
     plt.pcolormesh((x - xnow) / 1e3, y / 1e3, neplot.transpose(), cmap=cmap, shading="auto")
     #plt.xlim(-75, 50)
 #    plt.xlim(-400,400)
-    plt.xlim(-250,50)
-    plt.ylim(-50,250)
+    plt.xlim(-300,300)
+    plt.ylim(-300,300)
     plt.xlabel("x (km)")
     plt.ylabel("y (km)")
     plt.title(cfg["time"][it].strftime("%H:%M:%S"))
-    plt.clim(1e11,3e11)
+    plt.clim(1e11,4e11)
     cbarlab="$n_e$ (m$^{-3}$)"
     cbar=plt.colorbar(label=cbarlab)
     ax=plt.gca()
     #ax.set_aspect(5)
-    plt.show(block=False)
+    #plt.show(block=False)
     simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()
     simtimestr=str(simtime)
     simtimestr=padstr(simtime,simtimestr)

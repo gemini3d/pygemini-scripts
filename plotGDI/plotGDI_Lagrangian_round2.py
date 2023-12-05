@@ -23,7 +23,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # location of simulation output
 home=os.path.expanduser("~")
-direc = home+"/simulations/ssd/GDI_round_largedz_1.5km/"
+direc = home+"/simulations/ssd/200km_lagrangian2/"
 if (flagquiver): 
     plotdir=direc+"/customplots_quiver/"
 else:
