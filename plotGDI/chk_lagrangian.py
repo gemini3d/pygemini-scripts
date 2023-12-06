@@ -10,13 +10,13 @@ import gemini3d.read
 import matplotlib.pyplot as plt
 import numpy as np
 
-parmlbl="J2"
+parmlbl="J3"
 altref=[90e3,115e3,300e3,600e3,800e3]
 
 if not ("xg" in locals()):
     print("Reloading data...")
-    direc="~/simulations/ssd/200km_lagrangian5/"
-    direc2="~/simulations/ssd/200km_eulerian2/"
+    direc="~/simulations/ssd/200km_lagrangian6/"
+    direc2="~/simulations/ssd/200km_eulerian3/"
     cfg=gemini3d.read.config(direc)
     xg=gemini3d.read.grid(direc)
     x=xg["x2"][2:-2]
@@ -26,12 +26,13 @@ if not ("xg" in locals()):
     x2=xg2["x2"][2:-2]
     y2=xg2["x3"][2:-2]
     z2=xg2["x1"][2:-2]
-    it=10
-    dat=gemini3d.read.frame(direc,cfg["time"][it],var=parmlbl)
-    dat2=gemini3d.read.frame(direc2,cfg["time"][it],var=parmlbl)   
+    it=20
+    #dat=gemini3d.read.frame(direc,cfg["time"][it],var=parmlbl)
+    #dat2=gemini3d.read.frame(direc2,cfg["time"][it],var=parmlbl)   
+    dat=gemini3d.read.frame(direc,cfg["time"][it])
+    dat2=gemini3d.read.frame(direc2,cfg["time"][it])   
 
-
-
+# Compare the requested parameter
 plt.subplots(len(altref),2,dpi=150)
 for ialt in range(0,len(altref)):
     iz=np.argmin(abs(z-altref[ialt]))
@@ -47,3 +48,51 @@ for ialt in range(0,len(altref)):
     if (ialt==0):
         plt.title(parmlbl)
     plt.show()
+
+
+# Also compare potential solutions
+plt.subplots(1,2,dpi=150)
+plt.subplot(1,2,1)
+plt.pcolormesh(dat["Phitop"])
+plt.colorbar()
+plt.subplot(1,2,2)
+plt.pcolormesh(dat2["Phitop"])
+plt.colorbar()
+plt.show()
+
+
+# # check source terms and potential solves for each
+# lx=xg["lx"]
+# lxtwo=xg2["lx"]
+
+# fname="/Users/zettergm/simulations/ssd/200km_lagrangian5/potdebug.dat"
+# fdata=np.fromfile(fname,dtype="float64",count=lx[1]*lx[2]*2)
+# fdata=fdata.reshape((2,lx[1],lx[2]))
+# srcterm=fdata[0,:,:]
+# Phislab=fdata[1,:,:]
+
+# fname2="/Users/zettergm/simulations/ssd/200km_eulerian3/potdebug.dat"
+# fdata2=np.fromfile(fname2,dtype="float64",count=lxtwo[1]*lxtwo[2]*2)
+# fdata2=fdata2.reshape((2,lxtwo[1],lxtwo[2]))
+# srcterm2=fdata2[0,:,:]
+# Phislab2=fdata2[1,:,:]
+
+
+# # plot debug info
+# plt.subplots(2,2,dpi=150)
+# plt.subplot(2,2,1)
+# plt.pcolormesh(srcterm)
+# plt.colorbar()
+
+# plt.subplot(2,2,2)
+# plt.pcolormesh(Phislab)
+# plt.colorbar()
+
+# plt.subplot(2,2,3)
+# plt.pcolormesh(srcterm2)
+# plt.colorbar()
+
+# plt.subplot(2,2,4)
+# plt.pcolormesh(Phislab2)
+# plt.colorbar()
+
