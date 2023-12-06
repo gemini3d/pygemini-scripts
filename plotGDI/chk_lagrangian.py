@@ -10,7 +10,9 @@ import gemini3d.read
 import matplotlib.pyplot as plt
 import numpy as np
 
-parmlbl="J3"
+flagpot=False
+
+parmlbl="J2"
 altref=[90e3,115e3,300e3,600e3,800e3]
 
 if not ("xg" in locals()):
@@ -26,7 +28,7 @@ if not ("xg" in locals()):
     x2=xg2["x2"][2:-2]
     y2=xg2["x3"][2:-2]
     z2=xg2["x1"][2:-2]
-    it=20
+    it=5
     #dat=gemini3d.read.frame(direc,cfg["time"][it],var=parmlbl)
     #dat2=gemini3d.read.frame(direc2,cfg["time"][it],var=parmlbl)   
     dat=gemini3d.read.frame(direc,cfg["time"][it])
@@ -51,14 +53,15 @@ for ialt in range(0,len(altref)):
 
 
 # Also compare potential solutions
-plt.subplots(1,2,dpi=150)
-plt.subplot(1,2,1)
-plt.pcolormesh(dat["Phitop"])
-plt.colorbar()
-plt.subplot(1,2,2)
-plt.pcolormesh(dat2["Phitop"])
-plt.colorbar()
-plt.show()
+if flagpot: 
+    plt.subplots(1,2,dpi=150)
+    plt.subplot(1,2,1)
+    plt.pcolormesh(dat["Phitop"])
+    plt.colorbar()
+    plt.subplot(1,2,2)
+    plt.pcolormesh(dat2["Phitop"])
+    plt.colorbar()
+    plt.show()
 
 
 # # check source terms and potential solves for each
