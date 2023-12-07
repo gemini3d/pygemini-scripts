@@ -12,25 +12,13 @@ Created on Tue Nov 28 13:16:45 2023
 """
 
 
-def padstr(simtime,simtimestr):
-    simtimestrout=simtimestr
-    if simtime<10:
-        simtimestrout="0000"+simtimestrout
-    elif simtime<100:
-        simtimestrout="000"+simtimestrout
-    elif simtime<1000:
-        simtimestrout="00"+simtimestrout
-    elif simtime<10000:
-        simtimestrout="0"+simtimestrout
-    return simtimestrout
-
-
 import gemini3d.read
 #from plotcurv import plotcurv2D
 import matplotlib.pyplot as plt
 from gemini3d.grid.gridmodeldata import model2geogcoords
 import numpy as np
 import os
+import utilstr
 
 parmlbl="ne"
 
@@ -78,7 +66,7 @@ for it in range(0,len(cfg["time"])):
     simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()+7200
     plt.title("$n_e$ @ 300 km altitude:  "+str(cfg["time"][it]))
     simtimestr=str(simtime)
-    simtimestr=padstr(simtime,simtimestr)
+    simtimestr=utilstr.padstr(simtime,simtimestr)
     plt.savefig(plotdir+"/"+parmlbl+"_altlat_"+simtimestr+"s.png")
     
     altref=325e3
