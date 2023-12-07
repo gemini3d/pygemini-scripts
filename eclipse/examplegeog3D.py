@@ -55,7 +55,7 @@ for it in range(0,len(cfg["time"])):
     # grid data
     lalt = 384
     llat = 384
-    llon = 128
+    llon = 256
     altlims=(0,750e3)
     lonlims=(np.min(xg["glon"]),np.max(xg["glon"]))
     latlims=(np.min(xg["glat"]),np.max(xg["glat"]))
@@ -76,7 +76,7 @@ for it in range(0,len(cfg["time"])):
     plt.xlabel("geog. lat.")
     
     simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()+7200
-    plt.title("$\Delta n_e$ @ 300 km altitude (pct.):  "+str(simtime/60)+" min.")
+    plt.title("$n_e$ @ 300 km altitude:  "+str(cfg["time"][it]))
     simtimestr=str(simtime)
     simtimestr=padstr(simtime,simtimestr)
     plt.savefig(plotdir+"/"+parmlbl+"_altlat_"+simtimestr+"s.png")
@@ -89,6 +89,7 @@ for it in range(0,len(cfg["time"])):
     plt.colorbar(label="$n_e$ ")
     plt.ylabel("geog. lat.")
     plt.xlabel("geog. lon.")
+    plt.title("$n_e$ @ 300 km altitude:  "+str(cfg["time"][it]))
     plt.savefig(plotdir+"/"+parmlbl+"_lonlat_"+simtimestr+"s.png")
     
     # # extract a meaningful profile for the experiment
