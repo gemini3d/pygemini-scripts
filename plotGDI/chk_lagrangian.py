@@ -17,8 +17,9 @@ flagframeshift=True    # shift quantities into same FOR
 # information about the ExB drift (or grid drift as the case may be)
 v2grid=900
 v3grid=0
+x20=-200e3
 
-parmlbl="J2"
+parmlbl="ne"
 altref=[90e3,115e3,300e3,600e3,800e3]
 
 
@@ -27,8 +28,8 @@ if not ("xg" in locals()):
     print("Reloading data...")
 #    direc="~/simulations/ssd/200km_lagrangian8/"
 #    direc2="~/simulations/ssd/200km_eulerian3/"
-    direc="~/simulations/ssd/200km_lagrangian_lowres3/"
-    direc2="~/simulations/ssd/200km_eulerian_lowres3/"
+    direc="~/simulations/ssd/200km_lagrangian_symmsplit_planar/"
+    direc2="~/simulations/ssd/200km_eulerian_symmsplit_planar/"
     cfg=gemini3d.read.config(direc)
     xg=gemini3d.read.grid(direc)
     x=xg["x2"][2:-2]
@@ -38,7 +39,7 @@ if not ("xg" in locals()):
     x2=xg2["x2"][2:-2]
     y2=xg2["x3"][2:-2]
     z2=xg2["x1"][2:-2]
-    it=1
+    it=20
     #dat=gemini3d.read.frame(direc,cfg["time"][it],var=parmlbl)
     #dat2=gemini3d.read.frame(direc2,cfg["time"][it],var=parmlbl)   
     dat=gemini3d.read.frame(direc,cfg["time"][it])
@@ -50,7 +51,7 @@ print("Interpolating parameter of interest to a common grid...")
 dataplot=np.array(dat[parmlbl])
 dataplot2=np.array(dat2[parmlbl])
 t=(cfg["time"][it]-cfg["time"][0]).total_seconds()
-x2shift=x2-v2grid*t
+x2shift=x2-v2grid*t-x20
 y2shift=y2-v3grid*t
 [Z,X,Y]=np.meshgrid(np.array(z),np.array(x),np.array(y),indexing="ij")   # interpolation sites are based on Lagrangian grid
 srcpoints=(np.array(z),np.array(x2shift),np.array(y2shift))
@@ -67,18 +68,18 @@ for ialt in range(0,len(altref)):
     plt.pcolormesh(x,y,dataplot[iz,:,:].transpose())
     plt.colorbar()
     if (ialt==0):
-        plt.title(str(cfg["time"][it]))
+        plt.title(direc)
     iz2=np.argmin(abs(z2-altref[ialt]))
     plt.subplot(len(altref),3,3*ialt+2)
     plt.pcolormesh(x2,y2,dataplot2interp[iz2,:,:].transpose())
     plt.colorbar()
     if (ialt==0):
-        plt.title(parmlbl)
+        plt.title(direc2)
     plt.subplot(len(altref),3,3*ialt+3)
     plt.pcolormesh(x,y,(dataplot[iz,:,:]-dataplot2interp[iz2,:,:]).transpose())
     plt.colorbar()
     if (ialt==0):
-        plt.title(parmlbl)
+        plt.title(parmlbl+" "+str(cfg["time"][it]))
     plt.show()
 
 
@@ -99,12 +100,15 @@ if flagpot:
     plt.subplot(1,3,1)
     plt.pcolormesh(Phiplot)
     plt.colorbar()
+    plt.title(direc)
     plt.subplot(1,3,2)
     plt.pcolormesh(Phiplot2interp)
     plt.colorbar()
+    plt.title(direc2)
     plt.subplot(1,3,3)
     plt.pcolormesh(Phiplot-Phiplot2interp)
     plt.colorbar()
+    plt.title(parmlbl+" "+str(cfg["time"][it]))
     plt.show()
 
 
