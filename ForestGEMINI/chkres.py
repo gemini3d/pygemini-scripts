@@ -17,10 +17,9 @@ import xarray
 
 flagplot=False
 
-#cfg=gemini3d.read.config("~/Projects/gemini-examples/init/misty/config.nml")
-cfg=gemini3d.read.config("~/Projects/gemini-examples/init/CGCAM_NZ/config.nml")
-#xg=gemini3d.grid.tilted_dipole.tilted_dipole3d(cfg)
-xg=gemini3d.grid.tilted_dipole.tilted_dipole3d_NUx2(cfg)
+cfg=gemini3d.read.config("~/Projects/ForestGemini/build/examples/figments/misty_NM_256/inputs/config.nml")
+xg=gemini3d.grid.tilted_dipole.tilted_dipole3d(cfg)
+#xg=gemini3d.grid.tilted_dipole.tilted_dipole3d_NUx2(cfg)
 
 dl1=xg["dx1h"]*xg["h1"][2:-2,0,0]/1e3
 dl1_var=xg["dx1h"]*xg["h1"][2:-2,-1,-1]/1e3
@@ -99,7 +98,7 @@ plt.colorbar()
 plt.title("$dl_3$ (km), level 0 at 300 km altitude")
 
 ###############################################################################
-#  FIGMENTS/ForestGEMINI misty picture test
+#  FIGMENTS/ForestGEMINI misty picture test, 3Dx
 ###############################################################################
 #
 # For 8x8 patches and level 3 initial refinement (or mi=mj=8 and lvl 0 initial refine) 
@@ -116,3 +115,16 @@ plt.title("$dl_3$ (km), level 0 at 300 km altitude")
 #   Targetting resolution of 4x4x4 km means we need a grid of about
 #     512**3; 384**3 may also be acceptable for initial tests
 ###############################################################################
+
+
+###############################################################################
+#  FIGMENTS/ForestGEMINI misty picture test, 3Dx
+###############################################################################
+#
+# For 16x16 patches with 8x6x16 blocks and level 0 initial refine
+#
+# The goal is ~1km resolution (max) and a grid extent covering:  320km radius in x-y plane
+#   This corresponds to about 8 degrees mlat/mlon
+# 
+###############################################################################
+

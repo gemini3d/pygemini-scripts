@@ -17,7 +17,7 @@ flagframeshift=True    # shift quantities into same FOR
 # information about the ExB drift (or grid drift as the case may be)
 v2grid=900
 v3grid=0
-x20=-200e3
+x20=0e3
 
 parmlbl="ne"
 altref=[90e3,115e3,300e3,600e3,800e3]
@@ -28,8 +28,8 @@ if not ("xg" in locals()):
     print("Reloading data...")
 #    direc="~/simulations/ssd/200km_lagrangian8/"
 #    direc2="~/simulations/ssd/200km_eulerian3/"
-    direc="~/simulations/ssd/200km_lagrangian_symmsplit_planar/"
-    direc2="~/simulations/ssd/200km_eulerian_symmsplit_planar/"
+    direc="~/simulations/ssd/200km_lagrangian_symmsplit_planar_large_singlemode_nocap_nopar_RK2/"
+    direc2="~/simulations/ssd/200km_eulerian_symmsplit_planar_large_singlemode_nocap_nopar_RK2/"
     cfg=gemini3d.read.config(direc)
     xg=gemini3d.read.grid(direc)
     x=xg["x2"][2:-2]
@@ -39,7 +39,7 @@ if not ("xg" in locals()):
     x2=xg2["x2"][2:-2]
     y2=xg2["x3"][2:-2]
     z2=xg2["x1"][2:-2]
-    it=20
+    it=25
     #dat=gemini3d.read.frame(direc,cfg["time"][it],var=parmlbl)
     #dat2=gemini3d.read.frame(direc2,cfg["time"][it],var=parmlbl)   
     dat=gemini3d.read.frame(direc,cfg["time"][it])
@@ -71,7 +71,7 @@ for ialt in range(0,len(altref)):
         plt.title(direc)
     iz2=np.argmin(abs(z2-altref[ialt]))
     plt.subplot(len(altref),3,3*ialt+2)
-    plt.pcolormesh(x2,y2,dataplot2interp[iz2,:,:].transpose())
+    plt.pcolormesh(x,y,dataplot2interp[iz2,:,:].transpose())
     plt.colorbar()
     if (ialt==0):
         plt.title(direc2)
