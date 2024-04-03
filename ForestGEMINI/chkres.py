@@ -18,6 +18,8 @@ import xarray
 flagplot=False
 
 cfg=gemini3d.read.config("~/Projects/ForestGemini/build/examples/figments/misty_NM_256/inputs/config.nml")
+#cfg=gemini3d.read.config("~/Projects/gemini-examples/init/misty/config.nml")
+#cfg=gemini3d.read.config("~/Projects/gemini-examples/init/CGCAM_NZ/config.nml")
 xg=gemini3d.grid.tilted_dipole.tilted_dipole3d(cfg)
 #xg=gemini3d.grid.tilted_dipole.tilted_dipole3d_NUx2(cfg)
 
