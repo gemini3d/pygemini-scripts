@@ -14,10 +14,10 @@ import matplotlib.pyplot as plt
 
 mu0=4*np.pi*1e-7
 
-#direc="/Users/zettergm/simulations/sdcard/aurora_null_02/"
-#fname="20150201_36150.000000.h5"
-direc="/Users/zettergm/simulations/sdcard/arcs/"
-fname="20170302_27180.000000.h5"
+direc="/Users/zettergm/simulations/sdcard/aurora_null_02/"
+fname="20150201_35880.000000.h5"
+#direc="/Users/zettergm/simulations/sdcard/arcs/"
+#fname="20170302_27060.000000.h5"
 
 cfg=gemini3d.read.config(direc)
 #xg=gemini3d.read.grid(direc)
@@ -46,6 +46,7 @@ y=Y[0,:,0]
 Hyx,_=np.gradient(Hy,x,y)
 _,Hxy=np.gradient(Hx,x,y)
 Jz=Hyx-Hxy
+
 
 ###############################################################################
 xg=gemini3d.read.grid(direc)
