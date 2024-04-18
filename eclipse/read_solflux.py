@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # FISM? data input
-fname="/Volumes/uSDCard1TB/data/solar_flux/fism_masked_20231014_194000_gitm.sav"
+fname="/Users/zettergm/data/solar_flux/fism_masked_20231014_194000_gitm.sav"
 f = scipy.io.readsav(fname)
 glat=f["lat"]
 glon=f["lon"]
