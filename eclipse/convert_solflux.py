@@ -20,6 +20,8 @@ lambda1g=np.array([0.05, 0.4, 0.8, 1.8, 3.2, 7.0, 15.5, 22.4, 29.0, 32.0, 54.0, 
 lambda2g=np.array([0.4, 0.8, 1.8, 3.2, 7.0, 15.5, 22.4, 29.0, 32.0, 54.0, 65.0, 79.8, 79.8, 
          91.3, 91.3, 91.3, 97.5, 97.5, 97.5, 98.7, 102.7, 105.0])*1e-9
 lambdai=1/2*(lambda1g+lambda2g)  # center of GEMINI wavelength bin
+freqi=3e8/lambdai    # linear frequency of photons in this bin
+h=6.626e-34
 
 # source and target directories
 direc="/Volumes/uSDcard1TB/data/solflux/"
@@ -61,7 +63,7 @@ for filename in filelist:
     Iinfi=np.empty((lambdai.size,glon.size,glat.size))
     for ilat in range(0,glat.size):
         for ilon in range(0,glon.size):
-            Iinfi[:,ilon,ilat]=np.interp(lambdai,lambdactr,Iinf[:,ilon,ilat])
+            Iinfi[:,ilon,ilat]=np.interp(lambdai,lambdactr,Iinf[:,ilon,ilat])/h/freqi
     
     # write data in hdf5 format familiar to GEMINI
     ymd=filename[12:20]
@@ -76,5 +78,5 @@ for filename in filelist:
     outname=gemini3d.utils.datetime2stem(outdate)
     
     f = h5py.File(outdirec+outname+".h5","w")
-    f.create_dataset("/Iinf",data=Iinf)
+    f.create_dataset("/Iinf",data=Iinfi.transpose(0,2,1))
     f.close()
