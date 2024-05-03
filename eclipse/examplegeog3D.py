@@ -23,7 +23,7 @@ import utilstr
 parmlbl="ne"
 
 # load some sample data (2D)
-direc = "/Users/zettergm/simulations/raid2/simulations_eclipse/Oct2023_eclipse_solmax_20_3Dv2/"
+direc = "/Users/zettergm/simulations/sdcard/Oct2023_eclipse_nodatamask/"
 cfg = gemini3d.read.config(direc)
 xg = gemini3d.read.grid(direc)
 
@@ -69,7 +69,7 @@ for it in range(0,len(cfg["time"])):
     simtimestr=utilstr.padstr(simtime,simtimestr)
     plt.savefig(plotdir+"/"+parmlbl+"_altlat_"+simtimestr+"s.png")
     
-    altref=325e3
+    altref=225e3
     plt.figure(2)
     plt.clf()
     ialt=np.argmin(abs(alti-altref))
@@ -77,7 +77,7 @@ for it in range(0,len(cfg["time"])):
     plt.colorbar(label="$n_e$ ")
     plt.ylabel("geog. lat.")
     plt.xlabel("geog. lon.")
-    plt.title("$n_e$ @ 300 km altitude:  "+str(cfg["time"][it]))
+    plt.title("$n_e$ @ 225 km altitude:  "+str(cfg["time"][it]))
     plt.savefig(plotdir+"/"+parmlbl+"_lonlat_"+simtimestr+"s.png")
     
     # # extract a meaningful profile for the experiment

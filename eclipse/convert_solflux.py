@@ -35,8 +35,19 @@ filelist=filelist[1:]     # get rid of mac OS file
 
 # make a simsize and simgrid file for solar fluxes
 f = scipy.io.readsav(direc+filelist[0])
-glat=f["lat"]
-glon=f["lon"]
+glat=f["lat"].astype("float64")
+glon=f["lon"].astype("float64")
+
+
+# need to make 0 <= lon <= 360
+for ilon in range(0,glon.size):
+    if glon[ilon]<0:
+        glon[ilon]+=360
+ilonsort=np.argsort(glon)
+glon=glon[ilonsort]
+
+
+# save the sizes and grids
 f = h5py.File(outdirec+"simsize.h5","w")
 f.create_dataset("/llat",data=glat.size)
 f.create_dataset("/llon",data=glon.size)
@@ -53,12 +64,13 @@ for filename in filelist:
     fname=direc+filename
     print(fname)
     f = scipy.io.readsav(fname)
-    glat=f["lat"]
-    glon=f["lon"]
+    #glat=f["lat"]
+    #glon=f["lon"]
     Iinf=f["msk_irradiance_gitm"]
     lambda1=f["start_wv"]
     lambda2=f["end_wv"]
     lambdactr=1/2*(lambda1+lambda2)*1e-9    # center of wavelength bin, convert nm to m   
+    Iinf=Iinf[:,ilonsort,:]   
     
     Iinfi=np.empty((lambdai.size,glon.size,glat.size))
     for ilat in range(0,glat.size):
