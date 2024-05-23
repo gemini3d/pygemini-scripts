@@ -25,11 +25,10 @@ plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # locations for everything
-basedir="/Users/zettergm/simulations/ssd/QPR_0424/half.vs.full/"
+basedir="/Users/zettergm/simulations/ssd/10t/gemini_output_sampled/"
 direc1="full_gemini_output_hdf5/"
 direc2="half_gemini_output_hdf5/"
-filenames=["fort_frame_0016.vtu.hdf5", "fort_frame_0017.vtu.hdf5", "fort_frame_0018.vtu.hdf5", 
-           "fort_frame_0019.vtu.hdf5", "fort_frame_0020.vtu.hdf5"]
+filenames=["fort_frame_0030.vtu.hdf5", "fort_frame_0035.vtu.hdf5", "fort_frame_0040.vtu.hdf5"]
 plotdir=basedir+"plots/"
 if not os.path.isdir(plotdir):
     os.mkdir(plotdir)
