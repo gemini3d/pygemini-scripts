@@ -23,7 +23,7 @@ import utilstr
 parmlbl="ne"
 
 # load some sample data (2D)
-direc = "/Users/zettergm/simulations/ssd/Oct2023_eclipse_datamask_medres/"
+direc = "/Users/zettergm/simulations/sdcard/Oct2023_eclipse_datamask/"
 cfg = gemini3d.read.config(direc)
 xg = gemini3d.read.grid(direc)
 

@@ -14,6 +14,7 @@ import h5py
 import datetime
 import gemini3d.utils
 
+
 # GEMINI wavelength bin limits
 lambda1g=np.array([0.05, 0.4, 0.8, 1.8, 3.2, 7.0, 15.5, 22.4, 29.0, 32.0, 54.0, 65.0, 65.0, 
         79.8, 79.8, 79.8, 91.3, 91.3, 91.3, 97.5, 98.7, 102.7])*1e-9
@@ -23,9 +24,14 @@ lambdai=1/2*(lambda1g+lambda2g)  # center of GEMINI wavelength bin
 freqi=3e8/lambdai    # linear frequency of photons in this bin
 h=6.626e-34
 
+
 # source and target directories
-direc="/Volumes/uSDcard1TB/data/solflux/"
-outdirec="/Volumes/uSDcard1TB/data/solflux_h5/"
+#direc="/Volumes/uSDcard1TB/data/solflux_Oct2023/"
+#outdirec="/Volumes/uSDcard1TB/data/solflux_h5_Oct2023/"
+direc="/Volumes/uSDcard1TB/data/solflux_Apr2024/"
+outdirec="/Volumes/uSDcard1TB/data/solflux_h5_Apr2024/"
+
+# create a place to put the hdf5 files
 if not os.path.isdir(outdirec):
     os.mkdir(outdirec)
 filelist=os.listdir(direc)
@@ -72,6 +78,7 @@ for filename in filelist:
     lambdactr=1/2*(lambda1+lambda2)*1e-9    # center of wavelength bin, convert nm to m   
     Iinf=Iinf[:,ilonsort,:]   
     
+    # just linearly interpolate data for now
     Iinfi=np.empty((lambdai.size,glon.size,glat.size))
     for ilat in range(0,glat.size):
         for ilon in range(0,glon.size):
