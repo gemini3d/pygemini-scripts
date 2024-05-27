@@ -23,7 +23,7 @@ import utilstr
 parmlbl="ne"
 
 # load some sample data (2D)
-direc = "/Users/zettergm/simulations/sdcard/Oct2023_eclipse_datamask/"
+direc = "/Users/zettergm/simulations/ssd/Apr2024_total_eclipse_datamask/"
 cfg = gemini3d.read.config(direc)
 xg = gemini3d.read.grid(direc)
 
@@ -69,7 +69,7 @@ for it in range(0,len(cfg["time"])):
     simtimestr=utilstr.padstr(simtime,simtimestr)
     plt.savefig(plotdir+"/"+parmlbl+"_altlat_"+simtimestr+"s.png")
     
-    altref=275e3
+    altref=300e3
     plt.figure(2)
     plt.clf()
     ialt=np.argmin(abs(alti-altref))
