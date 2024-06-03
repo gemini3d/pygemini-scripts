@@ -23,7 +23,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # location of simulation output
 home=os.path.expanduser("~")
-direc = home+"/simulations/sdcard/GDI_airglow_disturb_offset/"
+direc = home+"/simulations/ssd/GDI_airglow_Disturb_rot_offset/"
 if (flagquiver): 
     plotdir=direc+"/customplots_quiver/"
 else:
@@ -50,7 +50,7 @@ ialt = np.argmin(abs(z - altref), axis=0)
 Bmag = 50000e-9
 Ey = -20e-3
 vx = -Ey / Bmag  # prescribed background drift of patch
-x0 = -1200e3  # initial patch position
+x0 = -1500e3  # initial patch position
 t0 = cfg["time"][0]
 
 # load data from a specified set of time indices
