@@ -15,12 +15,13 @@ import datetime
 import path
 
 # Reference location
-refglat=33.2
-refglon=253.66
-
+#refglat=33.2
+#refglon=253.66
+refglat=44.5
+refglon=360-73.2
 
 # load some sample data (2D)
-direc = "/Users/zettergm/simulations/raid2/simulations_eclipse/Oct2023_eclipse_solmax_20_3Dv2/"
+direc = "/Users/zettergm/simulations/ssd/eclipse/Oct2023_annular_eclipse_datamask4/"
 cfg = gemini3d.read.config(direc)
 xg = gemini3d.read.grid(direc)
 lx1=xg["lx"][0]
@@ -35,7 +36,7 @@ if not os.path.isdir(plotdir):
 
 
 # target grid for sampling
-lalt = 384
+lalt = 512
 llat = 384
 llon = 256
 altlims=(0,750e3)
@@ -76,7 +77,9 @@ for indind in range(0,len(itlist)):
     
     alti, gloni, glati, negeoi = model2geogcoords(xg, dat["ne"], lalt, llon, llat, altlims, lonlims, latlims)
     negeoi=negeoi.reshape((lalt,llon,llat))    
-    alti, gloni, glati, Tegeoi = model2geogcoords(xg, dat["Te"], lalt, llon, llat, altlims, lonlims, latlims)
+#    alti, gloni, glati, Tegeoi = model2geogcoords(xg, dat["Te"], lalt, llon, llat, altlims, lonlims, latlims)
+#    Tegeoi=Tegeoi.reshape((lalt,llon,llat))   
+    alti, gloni, glati, Tegeoi = model2geogcoords(xg, dat["Ti"], lalt, llon, llat, altlims, lonlims, latlims)
     Tegeoi=Tegeoi.reshape((lalt,llon,llat))   
     ne[:,:,:,indind]=negeoi
     Te[:,:,:,indind]=Tegeoi
@@ -104,7 +107,7 @@ for indind in range(0,len(itlist)):
     plt.plot(Teprof,alti/1e3)
     plt.xlim((0,2000))
     plt.ylim((90,350))
-    plt.xlabel("$T_e$ (K)")
+    plt.xlabel("$T_i$ (K)")
     #plt.ylabel("altitude (km)")
     
 #plt.legend(["$t_0$ - 60 min.","$t_0$ - 30 min.","$t_0$","$t_0$ + 30 min.","$t_0$ + 60 min."])

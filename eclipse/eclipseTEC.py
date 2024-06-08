@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Nov 28 13:16:45 2023
 
 @author: zettergm
 """
@@ -15,15 +14,11 @@ import numpy as np
 import os
 import utilstr
 
-parmlbl=["ne","v1","Te","Ti"]
+parmlbl=["ne"]
 
 # load some sample data (2D)
-direc = "/Users/zettergm/simulations/ssd/eclipse/Oct2023_annular_eclipse_datamask4/"
-#direc = "/Users/zettergm/simulations/ssd/eclipse/Apr2024_total_eclipse_datamask3/"
-
-ecglat=33.2
-ecglon=360-106.3
-
+#direc = "/Users/zettergm/simulations/ssd/eclipse/Oct2023_annular_eclipse_datamask4/"
+direc = "/Users/zettergm/simulations/ssd/eclipse/Apr2024_total_eclipse_datamask3/"
 cfg = gemini3d.read.config(direc)
 xg = gemini3d.read.grid(direc)
 
@@ -35,8 +30,6 @@ if not os.path.isdir(plotdir):
 # make plots for each time
 plt.ioff()    # so matplotlib doesn't take over the entire computer :(
 plt.figure(1,dpi=150)
-plt.figure(2,dpi=150)
-#plt.figure(3,dpi=150)
 for ilbl in range(0,len(parmlbl)):
     for it in range(0,len(cfg["time"])):
         print("Sampling model results in geographic coords for time step:  ",cfg["time"][it]," paramter:  ",parmlbl[ilbl])
@@ -52,46 +45,27 @@ for ilbl in range(0,len(parmlbl)):
         parm = dat[parmlbl[ilbl]]
         alti, gloni, glati, parmgeoi = model2geogcoords(xg, parm, lalt, llon, llat, altlims, lonlims, latlims)
         parmgeoi=parmgeoi.reshape((lalt,llon,llat))
+        parmgeoi[np.isnan(parmgeoi)]=0.0
         
-        # now plot interpolated data
-        ecglon=360-106;
-        ilon=np.argmin(abs(gloni-ecglon))
-        plt.figure(1)
-        plt.clf()
-        plt.axes().set_aspect(1/16)   
-        plt.pcolormesh(glati,alti/1e3,parmgeoi[:,ilon,:],shading="interp")
-        plt.ylim((0,750))
-        plt.colorbar(label=parmlbl[ilbl])
-        plt.ylabel("altitude (km)")
-        plt.xlabel("geog. lat.")
+        # compute total electron content
+        TEC=np.trapz(parmgeoi,alti,axis=0)
+        TEC=TEC/1e16
+        TEC[TEC<0.1]=np.NaN
         
+        # set up time labels
         simtime=(cfg["time"][it]-cfg["time"][0]).total_seconds()+7200
-        plt.title(parmlbl[ilbl]+" @"+str(gloni[ilon])+" deg. glon. "+str(cfg["time"][it]))
         simtimestr=str(simtime)
         simtimestr=utilstr.padstr(simtime,simtimestr)
         plt.savefig(plotdir+"/"+parmlbl[ilbl]+"_altlat_"+simtimestr+"s.png")
         
-        altref=300e3
+        altref=250e3
         plt.figure(2)
         plt.clf()
         ialt=np.argmin(abs(alti-altref))
-        plt.pcolormesh(gloni,glati,parmgeoi[ialt,:,:].transpose(),shading="interp")
-        plt.colorbar(label=parmlbl[ilbl])
+        plt.pcolormesh(gloni,glati,TEC.transpose(),shading="interp")
+        plt.colorbar(label="TEC")
         plt.ylabel("geog. lat.")
         plt.xlabel("geog. lon.")
-        plt.title(parmlbl[ilbl]+" @ "+str(altref/1e3)+" km altitude:  "+str(cfg["time"][it]))
-        plt.savefig(plotdir+"/"+parmlbl[ilbl]+"_lonlat_"+simtimestr+"s.png")
-        
-        # # extract a meaningful profile for the experiment
-        # ilat=np.argmin(abs(glati-ecglat))
-        # ilon=np.argmin(abs(gloni-ecglon))
-        # plt.figure(3)
-        # plt.clf()
-        # plt.plot(np.log10(parmgeoi[:,ilon,ilat]),alti/1e3)
-        # #plt.xlim((9, 12.7))
-        # #plt.ylim((0, 750))
-        # plt.xlabel(parmlbl[ilbl])
-        # plt.ylabel("altitude")
-        # plt.title(parmlbl[ilbl]+" @"+str(ecglat)+", "+str(ecglon)+" deg. glon. "+str(cfg["time"][it]))
-        # plt.savefig(plotdir+"/"+parmlbl[ilbl]+"_profiles_"+simtimestr+"s.png")
+        plt.title("TEC"+" "+str(cfg["time"][it]))
+        plt.savefig(plotdir+"/"+"TEC"+"_lonlat_"+simtimestr+"s.png")
 

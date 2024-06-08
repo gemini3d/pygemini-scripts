@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
+Created on Fri Jun  7 20:28:49 2024
+
 @author: zettergm
 """
 
@@ -23,8 +26,8 @@ plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # load some sample data (3D)
-#direc = "/Users/zettergm/simulations/ssd/ESF_periodic_lowres/"
-direc = "/Users/zettergm/simulations/ssd/GDI_periodic_lowres/"
+direc = "/Users/zettergm/simulations/ssd/ESF/ESF_Gaussian_retry_long/"
+#direc = "/Users/zettergm/simulations/ssd/GDI_periodic_lowres/"
 #direc = "/Users/zettergm/simulations/ssd/KHI_periodic_lowres/"
 plotdir=direc+"/customplots/"
 if not os.path.isdir(plotdir):
@@ -36,42 +39,40 @@ parmlbl="ne"
 cfg = read.config(direc)
 xg = read.grid(direc)
 parm="ne"
+q=xg["x1"][2:-2]
+p=xg["x2"][2:-2]
+phi=xg["x3"][2:-2]
 
-plt.subplots(1,3,figsize=(11,4.5),dpi=150)
+
+plt.subplots(1,3,figsize=(11,4.5),dpi=200)
 for it in range(0,len(cfg["time"])):
     dat = read.frame(direc, cfg["time"][it])
-    
-    ###############################################################################
-    # produce gridded dataset arrays from model output for user
-    ###############################################################################
-    lalt=192; llon=192; llat=192;
-    print("Sampling in geomagnetic coords...  ",cfg["time"][it])
-#    malti, mloni, mlati, parmmi = model2magcoords(xg, dat[parm], lalt, llon, llat)
-    malti, mloni, mlati, parmmi = model2geogcoords(xg, dat[parm], lalt, llon, llat)
+    [lq,lp,lphi]=dat["ne"].shape
+    parmmi=dat[parm]
     
     # quickly compare flows in model components vs. geographic as a meridional slice
     plt.clf()
     plt.subplot(1,3,1)
-    plt.pcolormesh(mlati,malti,parmmi[:,llon//2,:])
-    plt.ylim(0,1000e3)
-    plt.xlabel("mlat")
-    plt.ylabel("alt")
+    plt.pcolormesh(q,phi,parmmi[:,lp//2,:].transpose())
+    #plt.ylim(0,1000e3)
+    plt.xlabel("q")
+    plt.ylabel("phi")
     plt.title("$n_e$")
     plt.colorbar()
     
     plt.subplot(1,3,2)
-    plt.pcolormesh(mloni,malti,parmmi[:,:,llat//2])
-    plt.ylim(0,1000e3)
-    plt.xlabel("mlon")
-    plt.ylabel("alt")
+    plt.pcolormesh(q,p,parmmi[:,:,lphi//2].transpose())
+    #plt.ylim(0,1000e3)
+    plt.xlabel("q")
+    plt.ylabel("p")
     plt.colorbar()
     plt.title("$n_e$")
     
     plt.subplot(1,3,3)
-    plt.pcolormesh(mloni,mlati,parmmi[lalt//2,:,:].transpose())
-    plt.xlabel("mlon")
-    plt.ylabel("mlat")
+    plt.pcolormesh(p,phi,parmmi[lq//2,:,:].transpose())
+    plt.xlabel("p")
+    plt.ylabel("phi")
     plt.colorbar()
     plt.title("$n_e$")
 
-    plt.savefig(plotdir+"/"+parmlbl+str(cfg["time"][it])+"s.png")
+    plt.savefig(plotdir+"/"+parmlbl+str(cfg["time"][it])+"s_native.png")
