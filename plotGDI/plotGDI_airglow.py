@@ -23,7 +23,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # location of simulation output
 home=os.path.expanduser("~")
-direc = home+"/simulations/ssd/GDI_airglow_Disturb_rot_offset/"
+direc = home+"/simulations/raid2/simulations_GDI_airglow/v5/GDI_airglow_disturb_rot_profile_offset_glow/"
 if (flagquiver): 
     plotdir=direc+"/customplots_quiver/"
 else:
