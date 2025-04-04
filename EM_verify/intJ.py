@@ -8,9 +8,11 @@ Created on Thu Aug  8 08:08:02 2024
 
 import gemini3d.read
 import numpy as np
+import matplotlib.pyplot as plt
 
 # load data
-direc="~/simulations/sdcard/aurora_EISCAT3D_centered/"
+direc="~/simulations/sdcard/aurora_EISCAT3D_centered_NUx2/"
+#direc="~/simulations/sdcard/arcs_highres2/"
 cfg=gemini3d.read.config(direc)
 xg=gemini3d.read.grid(direc)
 dat=gemini3d.read.frame(direc,time=cfg["time"][15])
@@ -38,40 +40,57 @@ J3=dat["J3"]
 #     x1[bottom,top], x2[left,right], x3[bwd,fwd].  As long as the data are
 #     cell-centered this is equivalent to a 2D trapezoidal rule.  
 #
+
+Itop=np.empty( (lx2,lx3) )
+Ibottom=np.empty( (lx2,lx3) )
+
 # bottom
 I = np.empty((6))
 I[0]=0
 for i2 in range(lx2):
     for i3 in range(lx3):
         I[0] += J1[0,i2,i3]*h2[0,i2,i3]*h3[0,i2,i3]*dx2[i2]*dx3[i3]
+        Itop[i2,i3]=J1[0,i2,i3]*h2[0,i2,i3]*h3[0,i2,i3]*dx2[i2]*dx3[i3]
 
 # top, minus due to surf. normal in -x1 direction
 I[1]=0
 for i2 in range(lx2):
     for i3 in range(lx3):
         I[1] -= J1[-1,i2,i3]*h2[-1,i2,i3]*h3[-1,i2,i3]*dx2[i2]*dx3[i3]
+        Ibottom[i2,i3]=J1[-1,i2,i3]*h2[-1,i2,i3]*h3[-1,i2,i3]*dx2[i2]*dx3[i3]
 
 # left
 I[2]=0
 for i1 in range(lx1):
     for i3 in range(lx3):
-        I[2] += J2[i1,0,i3]*h1[i1,0,i3]*h3[i1,0,i3]*dx1[i2]*dx3[i3]
+        I[2] += J2[i1,0,i3]*h1[i1,0,i3]*h3[i1,0,i3]*dx1[i1]*dx3[i3]
 
 # right
 I[3]=0
 for i1 in range(lx1):
     for i3 in range(lx3):
-        I[3] -= J2[i1,-1,i3]*h1[i1,-1,i3]*h3[i1,-1,i3]*dx1[i2]*dx3[i3]
+        I[3] -= J2[i1,-1,i3]*h1[i1,-1,i3]*h3[i1,-1,i3]*dx1[i1]*dx3[i3]
 
 # bwd
 I[4]=0
 for i1 in range(lx1):
     for i2 in range(lx2):
-        I[4] += J3[i1,i2,0]*h1[i1,i2,0]*h2[i1,i2,0]*dx1[0]*dx2[0]
+        I[4] += J3[i1,i2,0]*h1[i1,i2,0]*h2[i1,i2,0]*dx1[i1]*dx2[i2]
         
 I[5]=0
 for i1 in range(lx1):
     for i2 in range(lx2):
-        I[5] -= J3[i1,i2,-1]*h1[i1,i2,-1]*h2[i1,i2,-1]*dx1[0]*dx2[0]        
+        I[5] -= J3[i1,i2,-1]*h1[i1,i2,-1]*h2[i1,i2,-1]*dx1[i1]*dx2[i2]        
 
 print("mean(|I|):  ",np.mean(abs(I)),"; net I:  ",np.sum(I))
+
+#idx=np.where(Itop<0.0)
+#Itop[idx]=-Itop[idx]
+plt.subplots(2,1,dpi=150)
+plt.subplot(1,2,1)
+plt.pcolormesh(x3,x2,Itop,shading="gouraud")
+plt.colorbar()
+
+plt.subplot(1,2,2)
+plt.pcolormesh(x3,x2,Ibottom,shading="gouraud")
+plt.colorbar()
