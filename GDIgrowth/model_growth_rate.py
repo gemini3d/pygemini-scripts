@@ -33,6 +33,9 @@ lz=xg["lx"][0]      # number of cells in z-direction
 lx=xg["lx"][1]
 ly=xg["lx"][2]
 
+# Initial patch position index
+ix0=np.argmin(abs(x-x0))
+
 # Organize timing info
 lt=len(cfg["time"])      # number of simulation output files for this run
 refdate=cfg["time"][0]
@@ -90,11 +93,13 @@ plt.plot(tsec[-1],satamp,"o")
 # fit a line to log amplitude
 ln_parm=np.log(parm_linear)    # log amplitude data (linear growth only)
 p=np.polyfit(t_linear,ln_parm,1)
-logslope=p[0]     # highest order coefficient first! Why!
+logslope=p[0]
 parmfit=np.exp(p[1])*np.exp(logslope*t_linear)
 
 # analytical form of growth rate
-ell=5e3
+parmslice=parm[iz,:,ly//2,0]
+dndx=np.gradient(parmslice,x)
+ell=parmslice[ix0]/dndx[ix0]
 gamma=v/ell
 
 plt.plot(t_linear,parmfit,'.')
