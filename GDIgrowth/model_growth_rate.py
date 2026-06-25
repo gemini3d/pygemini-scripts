@@ -20,9 +20,8 @@ x0=-655e3            # initial x-position of trailing edge of patch
 z0=312e3             # hmF2
 
 # Simulation information and grid
-#direc="~/simulations/ssd_ext/ONR_Lamarche/GDI_reference/"
-#direc="~/simulations/sdcard/ONR_Lamarche/GDI_reference/"
-direc="/Volumes/Picard/GDI_reference_hires/"
+direc="~/simulations/sdcard/ONR_Lamarche/GDI_reference/"
+#direc="~/simulations/sdcard/ONR_Lamarche/GDI_reference_hires/"
 cfg=gemini3d.read.config(direc)
 xg=gemini3d.read.grid(direc)
 Bmag=xg["Bmag"].mean()
@@ -101,9 +100,17 @@ logslope=p[0]
 parmfit=np.exp(p[1])*np.exp(logslope*t_linear)
 
 # analytical form of growth rate
-parmslice=parm[iz,:,ly//2,0]
+# colden=np.empty((lx,ly,lt))
+# for ix in range(0,lx):
+#     for iy in range(0,ly):
+#         colden[ix,iy,it]=np.trapz(parm[:,ix,iy,itmin],z)
+#         dNdx,dNdy=np.gradient(colden,x,y)
+
+# Initial patch position index, but take from after when simulation has settled
+ix0_itmin=np.argmin(abs(x-xprime[itmin]))
+parmslice=parm[iz,:,ly//2,itmin]
 dndx=np.gradient(parmslice,x)
-ell=parmslice[ix0]/dndx[ix0]
+ell=parmslice[ix0_itmin]/dndx[ix0_itmin]
 gamma=v/ell
 
 plt.plot(t_linear,parmfit,'.')
