@@ -20,7 +20,9 @@ x0=-655e3            # initial x-position of trailing edge of patch
 z0=312e3             # hmF2
 
 # Simulation information and grid
-direc="~/simulations/sdcard/ONR_Lamarche/GDI_reference/"
+#direc="~/simulations/ssd_ext/ONR_Lamarche/GDI_reference/"
+#direc="~/simulations/sdcard/ONR_Lamarche/GDI_reference/"
+direc="/Volumes/Picard/GDI_reference_hires/"
 cfg=gemini3d.read.config(direc)
 xg=gemini3d.read.grid(direc)
 Bmag=xg["Bmag"].mean()
@@ -59,11 +61,13 @@ for it in range(0,lt):
 # time series analysis for growth rate
 iz=np.argmin(abs(z-z0))
 parmxyt=parm[iz,:,:,:]
+parmyt=np.empty((ly,lt))
 parmamp=np.empty((lt))
 xprime=np.empty((lt))
 for it in range(0,lt):
     xprime[it]=x0+v*tsec[it]           # position of gradient translated to current time
     ix=np.argmin(abs(x-xprime[it]))
+    parmyt[:,it]=parmxyt[ix,:,it]
     parmamp[it]=np.std(parmxyt[ix,:,it])
 
 # Plot a curve that represents the growth of the fluctuation amplitude
